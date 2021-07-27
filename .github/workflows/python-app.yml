@@ -32,3 +32,8 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=src tests
+    - name: Upload coverage to codecov.io
+      run: bash <(curl -s https://codecov.io/bash)
+      if: always()
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
