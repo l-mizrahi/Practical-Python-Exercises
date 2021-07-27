@@ -13,3 +13,7 @@ def read_portfolio(filename):
             portfolio.append(dict(zip(headers, row)))
 
     return portfolio
+
+
+def read_prices(filename):
+    pass

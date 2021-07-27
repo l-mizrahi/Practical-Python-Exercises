@@ -1,6 +1,6 @@
 from src.pcost import portfolio_cost
 import pytest
-from src.report import read_portfolio
+from src.report import read_portfolio, read_prices
 
 
 def test_read_portfolio():
@@ -22,3 +22,16 @@ def test_read_portfolio():
 def test_read_portfolio_missing_values():
     with pytest.raises(ValueError):
         portfolio_cost("data/missing.csv")
+
+
+def test_read_prices():
+    prices = read_prices("data/prices.csv")
+    prices = dict(list(prices.items())[:5])
+    expected = {"AA": 9.22, "AXP": 24.85, "BA": 44.85, "BAC": 11.27, "C": 3.72}
+
+    assert prices == expected
+
+
+def test_read_prices_missing_values():
+    with pytest.raises(ValueError):
+        read_prices("data/prices.csv")
