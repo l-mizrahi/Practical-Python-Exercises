@@ -16,4 +16,11 @@ def read_portfolio(filename):
 
 
 def read_prices(filename):
-    pass
+    prices = {}
+    with open(filename) as f:
+        rows = csv.reader(f)
+        for row in rows:
+            if not row:
+                continue
+            prices[row[0]] = float(row[1])
+    return prices

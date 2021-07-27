@@ -30,8 +30,3 @@ def test_read_prices():
     expected = {"AA": 9.22, "AXP": 24.85, "BA": 44.85, "BAC": 11.27, "C": 3.72}
 
     assert prices == expected
-
-
-def test_read_prices_missing_values():
-    with pytest.raises(ValueError):
-        read_prices("data/prices.csv")
