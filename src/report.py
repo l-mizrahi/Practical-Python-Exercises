@@ -27,4 +27,6 @@ def read_prices(filename):
 
 
 def calc_gain_loss(portfolio, prices):
-    pass
+    for port in portfolio:
+        port["change"] = -(port["price"] - prices[port["name"]])
+    return portfolio
