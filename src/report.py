@@ -42,4 +42,9 @@ def make_report(portfolio, prices):
 
 
 def print_report(report_data):
-    pass
+    output = []
+    output.append(f"{'Name':>10s} {'Shares':>10s} {'Price':>10s} {'Change':>10s}")
+    output.append(" ".join(["-" * 10] * 4))
+    for r in report_data:
+        output.append("{:>10s} {:>10d} {:>10.2f} {:>10.2f}".format(*r))
+    return output
