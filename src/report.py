@@ -28,9 +28,14 @@ def read_prices(filename):
 
 def calc_gain_loss(portfolio, prices):
     for port in portfolio:
-        port["change"] = -(port["price"] - prices[port["name"]])
+        port["change"] = round(-(port["price"] - prices[port["name"]]), 2)
     return portfolio
 
 
 def make_report(portfolio, prices):
-    pass
+    gain_loss = calc_gain_loss(portfolio, prices)
+    report_data = []
+
+    for gl in gain_loss:
+        report_data.append((gl["name"], gl["shares"], prices[gl["name"]], gl["change"]))
+    return report_data
