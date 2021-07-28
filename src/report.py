@@ -39,3 +39,7 @@ def make_report(portfolio, prices):
     for gl in gain_loss:
         report_data.append((gl["name"], gl["shares"], prices[gl["name"]], gl["change"]))
     return report_data
+
+
+def print_report(report_data):
+    pass
