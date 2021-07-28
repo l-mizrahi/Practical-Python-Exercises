@@ -30,3 +30,7 @@ def calc_gain_loss(portfolio, prices):
     for port in portfolio:
         port["change"] = -(port["price"] - prices[port["name"]])
     return portfolio
+
+
+def make_report(portfolio, prices):
+    pass
