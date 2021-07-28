@@ -24,3 +24,7 @@ def read_prices(filename):
                 continue
             prices[row[0]] = float(row[1])
     return prices
+
+
+def calc_gain_loss(portfolio, prices):
+    pass

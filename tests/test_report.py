@@ -1,6 +1,6 @@
 from src.pcost import portfolio_cost
 import pytest
-from src.report import read_portfolio, read_prices
+from src.report import read_portfolio, read_prices, calc_gain_loss
 
 
 def test_read_portfolio():
@@ -30,3 +30,14 @@ def test_read_prices():
     expected = {"AA": 9.22, "AXP": 24.85, "BA": 44.85, "BAC": 11.27, "C": 3.72}
 
     assert prices == expected
+
+
+def test_calc_gain_loss():
+    prices = read_prices("data/prices.csv")
+    portfolio = read_portfolio("data/portfolio.csv")
+
+    expected = [-22.98, 15.18, -47.98, -30.34, -26.89, -44.21, 35.84]
+
+    gain_loss = calc_gain_loss(portfolio, prices)
+
+    assert all([round(gl["change"], 2) == e for gl, e in zip(gain_loss, expected)])
