@@ -10,6 +10,9 @@ from src.report import (
 
 
 def test_read_portfolio():
+    """
+    Tests if read_portfolio constructs each entry in the list correctly.
+    """
     portfolio = read_portfolio("data/portfolio.csv")
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
@@ -26,11 +29,17 @@ def test_read_portfolio():
 
 
 def test_read_portfolio_missing_values():
+    """
+    Tests if read_portfolio raises a ValueError if there is a blank line in the file.
+    """
     with pytest.raises(ValueError):
         portfolio_cost("data/missing.csv")
 
 
 def test_read_prices():
+    """
+    Tests if read_prices constructs the dictionary of prices correctly.
+    """
     prices = read_prices("data/prices.csv")
     prices = dict(list(prices.items())[:5])
     expected = {"AA": 9.22, "AXP": 24.85, "BA": 44.85, "BAC": 11.27, "C": 3.72}
@@ -39,6 +48,10 @@ def test_read_prices():
 
 
 def test_calc_gain_loss():
+    """
+    Tests if calc_gain_loss calculates the change in price correctly
+    and inserts it into the new dictionary.
+    """
     prices = read_prices("data/prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
 
@@ -50,6 +63,9 @@ def test_calc_gain_loss():
 
 
 def test_make_report():
+    """
+    Tests if make_report formats the portfolio correctly.
+    """
     prices = read_prices("data/prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
     report = make_report(portfolio, prices)
@@ -68,6 +84,9 @@ def test_make_report():
 
 
 def test_print_report():
+    """
+    Tests if print_report generates the correct looking table.
+    """
     prices = read_prices("data/prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
     report = make_report(portfolio, prices)
