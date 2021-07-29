@@ -1,7 +1,8 @@
 import csv
+from typing import List, Dict, Tuple
 
 
-def read_portfolio(filename):
+def read_portfolio(filename: str) -> List[Dict]:
     portfolio = []
     with open(filename) as f:
         rows = csv.reader(f)
@@ -9,13 +10,13 @@ def read_portfolio(filename):
         for row in rows:
             if not row:
                 raise ValueError
-            row = (row[0], int(row[1]), float(row[2]))
-            portfolio.append(dict(zip(headers, row)))
+            newrow = (row[0], int(row[1]), float(row[2]))
+            portfolio.append(dict(zip(headers, newrow)))
 
     return portfolio
 
 
-def read_prices(filename):
+def read_prices(filename: str) -> Dict:
     prices = {}
     with open(filename) as f:
         rows = csv.reader(f)
@@ -26,13 +27,15 @@ def read_prices(filename):
     return prices
 
 
-def calc_gain_loss(portfolio, prices):
+def calc_gain_loss(portfolio: List[Dict], prices: Dict) -> List[Dict]:
     for port in portfolio:
         port["change"] = round(-(port["price"] - prices[port["name"]]), 2)
     return portfolio
 
 
-def make_report(portfolio, prices):
+def make_report(
+    portfolio: List[Dict], prices: Dict
+) -> List[Tuple[str, int, float, float]]:
     gain_loss = calc_gain_loss(portfolio, prices)
     report_data = []
 
@@ -41,7 +44,7 @@ def make_report(portfolio, prices):
     return report_data
 
 
-def print_report(report_data):
+def print_report(report_data: List[Tuple]) -> List[str]:
     output = []
     output.append(f"{'Name':>10s} {'Shares':>10s} {'Price':>10s} {'Change':>10s}")
     output.append(" ".join(["-" * 10] * 4))

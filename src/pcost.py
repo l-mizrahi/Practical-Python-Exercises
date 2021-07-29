@@ -1,8 +1,8 @@
 import csv
 
 
-def portfolio_cost(filename):
-    total_cost = 0
+def portfolio_cost(filename: str) -> float:
+    total_cost = 0.0
     with open(filename) as f:
         rows = csv.reader(f)
         headers = next(rows)
@@ -10,8 +10,8 @@ def portfolio_cost(filename):
             if not row:
                 continue
             try:
-                row = dict(zip(headers, row))
-                total_cost += int(row["shares"]) * float(row["price"])
+                rowdict = dict(zip(headers, row))
+                total_cost += int(rowdict["shares"]) * float(rowdict["price"])
 
             except Exception:
                 raise ValueError
