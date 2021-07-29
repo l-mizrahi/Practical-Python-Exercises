@@ -2,16 +2,16 @@ import csv
 from typing import List, Dict, Tuple
 
 
-def read_portfolio(filename: str) -> List[Dict]:
+def read_portfolio(file_path: str) -> List[Dict]:
     """
     Reads a portfolio file and places each entry into a list.
 
-    :param filename: Name of the portfolio file
+    :param file_path: Path to the portfolio file
     :raises ValueError: Raises ValueError if line in the file is empty
     :return: Returns list of portfolio entries
     """
     portfolio = []
-    with open(filename) as f:
+    with open(file_path) as f:
         rows = csv.reader(f)
         headers = next(rows)
         for row in rows:
@@ -23,15 +23,15 @@ def read_portfolio(filename: str) -> List[Dict]:
     return portfolio
 
 
-def read_prices(filename: str) -> Dict:
+def read_prices(file_path: str) -> Dict:
     """
     Reads a prices file and places each entry into a dictionary.
 
-    :param filename: Name of the prices file
+    :param file_path: Path to the prices file
     :return: Returns a dictionary of prices and their stock names
     """
     prices = {}
-    with open(filename) as f:
+    with open(file_path) as f:
         rows = csv.reader(f)
         for row in rows:
             if not row:
