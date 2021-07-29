@@ -17,7 +17,7 @@ def read_portfolio(file_path: str) -> List[Dict]:
         headers = next(rows)
         for row in rows:
             if not row:
-                raise ValueError
+                raise ValueError("Cannot process blank lines.")
             newrow = (row[0], int(row[1]), float(row[2]))
             portfolio.append(dict(zip(headers, newrow)))
 
