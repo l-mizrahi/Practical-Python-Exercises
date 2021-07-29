@@ -15,14 +15,17 @@ def portfolio_cost(file_path: str) -> float:
     with open(file_path) as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
+        for rowno, row in enumerate(rows, 1):
             if not row:
                 continue
+            rowdict = dict(zip(headers, row))
             try:
-                rowdict = dict(zip(headers, row))
-                total_cost += int(rowdict["shares"]) * float(rowdict["price"])
+                shares = int(rowdict["shares"])
+                price = float(rowdict["price"])
+                total_cost += shares * price
 
-            except Exception:
-                raise ValueError
+            # Exercise asks to catch the error like this
+            except ValueError:
+                print(f"Row {rowno}: Bad row {rowdict}")
 
     return total_cost

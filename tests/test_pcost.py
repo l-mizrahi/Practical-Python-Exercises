@@ -1,4 +1,3 @@
-import pytest
 from src.pcost import portfolio_cost
 
 
@@ -9,12 +8,19 @@ def test_portfolio_cost():
     assert portfolio_cost("data/portfolio.csv") == 44671.15
 
 
-def test_portfolio_cost_missing_values():
+def test_portfolio_cost_missing_values(capfd):
     """
     Tests if portfolio_cost raises a ValueError if there are blank lines in the file.
     """
-    with pytest.raises(ValueError):
-        portfolio_cost("data/missing.csv")
+    cost = portfolio_cost("data/missing.csv")
+    out, err = capfd.readouterr()
+
+    assert cost == 27381.15
+    assert (
+        out.strip("\n")
+        == "Row 4: Bad row {'name': 'MSFT', 'shares': '', 'price': '51.23'}\n\
+Row 7: Bad row {'name': 'IBM', 'shares': '', 'price': '70.44'}"
+    )
 
 
 def test_portfolio_cost_different_headers():
@@ -24,9 +30,15 @@ def test_portfolio_cost_different_headers():
     assert portfolio_cost("data/portfoliodate.csv") == 44671.15
 
 
-def test_portfolio_cost_incorrect_format():
+def test_portfolio_cost_incorrect_format(capfd):
     """
     Tests if portfolio_cost raises a ValueError if type conversion cannot be done.
     """
-    with pytest.raises(ValueError):
-        portfolio_cost("data/portfolio3.csv")
+    cost = portfolio_cost("data/portfolio3.csv")
+    out, err = capfd.readouterr()
+
+    assert cost == 9121.25
+    assert (
+        out.strip("\n")
+        == "Row 2: Bad row {'name': 'HPQ', 'shares': '250', 'price': 'forty'}"
+    )
