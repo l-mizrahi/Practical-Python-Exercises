@@ -14,10 +14,10 @@ repos:
     -   id: black
         language_version: python3.9
 -   repo: https://github.com/PyCQA/flake8
-    rev: c8d1be624612d338ab70ee523d01beca9f019bdc
+    rev: 3.9.2
     hooks:
     -   id: flake8
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 449ace5e55cb1e43057ab67349dce1208e657768
+    rev: v0.910
     hooks:
     -   id: mypy
