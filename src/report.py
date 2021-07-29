@@ -7,7 +7,8 @@ def read_portfolio(file_path: str) -> List[Dict]:
     Reads a portfolio file and places each entry into a list.
 
     :param file_path: Path to the portfolio file
-    :raises ValueError: Raises ValueError if line in the file is empty
+    :raises ValueError: Raises error if line in the file is empty
+                        Like in missing.csv. This was part of the exercise
     :return: Returns list of portfolio entries
     """
     portfolio = []

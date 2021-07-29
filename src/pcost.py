@@ -7,7 +7,8 @@ def portfolio_cost(file_path: str) -> float:
     and the corresponding price.
 
     :param file_path: Path to the portfolio file
-    :raises ValueError: Raises ValueError if type conversion cannot be done
+    :raises ValueError: Raises error if a 'shares' value cannot be converted to an int
+                        or if a 'price' value cannot be converted to a float
     :return: The cost of the portfolio
     """
     total_cost = 0.0
