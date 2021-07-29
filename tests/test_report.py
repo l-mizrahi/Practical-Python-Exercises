@@ -1,4 +1,3 @@
-from src.pcost import portfolio_cost
 import pytest
 from src.report import (
     print_report,
@@ -33,7 +32,7 @@ def test_read_portfolio_missing_values():
     Tests if read_portfolio raises a ValueError if there is a blank line in the file.
     """
     with pytest.raises(ValueError):
-        portfolio_cost("data/missing.csv")
+        read_portfolio("data/missing.csv")
 
 
 def test_read_prices():
