@@ -15,10 +15,10 @@ def read_portfolio(file_path: str) -> List[Dict]:
     with open(file_path) as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
-            if not row:
+        for name, shares, price in rows:
+            if not all([name, shares, price]):
                 raise ValueError("Cannot process blank lines.")
-            newrow = (row[0], int(row[1]), float(row[2]))
+            newrow = (name, int(shares), float(price))
             portfolio.append(dict(zip(headers, newrow)))
 
     return portfolio
@@ -34,10 +34,10 @@ def read_prices(file_path: str) -> Dict:
     prices = {}
     with open(file_path) as f:
         rows = csv.reader(f)
-        for row in rows:
-            if not row:
+        for name, price in rows:
+            if not all([name, price]):
                 continue
-            prices[row[0]] = float(row[1])
+            prices[name] = float(price)
     return prices
 
 
