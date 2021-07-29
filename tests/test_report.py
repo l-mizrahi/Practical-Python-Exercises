@@ -23,8 +23,7 @@ def test_read_portfolio():
         {"name": "IBM", "shares": 100, "price": 70.44},
     ]
 
-    assert len(portfolio) == len(expected)
-    assert all([p == e for p, e in zip(portfolio, expected)])
+    assert portfolio == expected
 
 
 def test_read_portfolio_missing_values():
@@ -79,7 +78,7 @@ def test_make_report():
         ("IBM", 100, 106.28, 35.84),
     ]
 
-    assert all([r == e for r, e in zip(report, expected)])
+    assert report == expected
 
 
 def test_print_report():
@@ -103,5 +102,4 @@ def test_print_report():
         "       IBM        100     106.28      35.84",
     ]
 
-    print(expected)
     assert printed_report == expected
