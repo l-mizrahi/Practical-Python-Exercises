@@ -1,18 +1,19 @@
 from src.pcost import portfolio_cost
+from src import DATA_DIRECTORY
 
 
 def test_portfolio_cost():
     """
     Tests if portfolio_cost calculates the cost of a portfolio correctly.
     """
-    assert portfolio_cost("data/portfolio.csv") == 44671.15
+    assert portfolio_cost(DATA_DIRECTORY / "portfolio.csv") == 44671.15
 
 
 def test_portfolio_cost_missing_values(capfd):
     """
     Tests if portfolio_cost raises a ValueError if there are blank lines in the file.
     """
-    cost = portfolio_cost("data/missing.csv")
+    cost = portfolio_cost(DATA_DIRECTORY / "missing.csv")
     out, err = capfd.readouterr()
 
     assert cost == 27381.15
@@ -27,14 +28,14 @@ def test_portfolio_cost_different_headers():
     """
     Tests if portfolio_cost calculates the correct cost given a different file format.
     """
-    assert portfolio_cost("data/portfoliodate.csv") == 44671.15
+    assert portfolio_cost(DATA_DIRECTORY / "portfoliodate.csv") == 44671.15
 
 
 def test_portfolio_cost_incorrect_format(capfd):
     """
     Tests if portfolio_cost raises a ValueError if type conversion cannot be done.
     """
-    cost = portfolio_cost("data/portfolio3.csv")
+    cost = portfolio_cost(DATA_DIRECTORY / "portfolio3.csv")
     out, err = capfd.readouterr()
 
     assert cost == 9121.25

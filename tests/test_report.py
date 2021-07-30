@@ -6,13 +6,14 @@ from src.report import (
     calc_gain_loss,
     make_report,
 )
+from src import DATA_DIRECTORY
 
 
 def test_read_portfolio():
     """
     Tests if read_portfolio constructs each entry in the list correctly.
     """
-    portfolio = read_portfolio("data/portfolio.csv")
+    portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
         {"name": "IBM", "shares": 50, "price": 91.1},
@@ -50,7 +51,7 @@ def test_calc_gain_loss():
     Tests if calc_gain_loss calculates the change in price correctly
     and inserts it into the new dictionary.
     """
-    prices = read_prices("data/prices.csv")
+    prices = read_prices(DATA_DIRECTORY / "prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
 
     expected = [-22.98, 15.18, -47.98, -30.34, -26.89, -44.21, 35.84]
@@ -64,7 +65,7 @@ def test_make_report():
     """
     Tests if make_report formats the portfolio correctly.
     """
-    prices = read_prices("data/prices.csv")
+    prices = read_prices(DATA_DIRECTORY / "prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
     report = make_report(portfolio, prices)
 
