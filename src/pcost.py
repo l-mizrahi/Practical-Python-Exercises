@@ -27,6 +27,6 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
 
             # Exercise asks to catch the error like this
             except ValueError:
-                logging.info(f"Row {rowno}: Bad row {rowdict}")
+                logging.exception(f"Could not process row number {rowno}: {rowdict}")
 
     return total_cost
