@@ -9,19 +9,15 @@ def test_portfolio_cost():
     assert portfolio_cost(DATA_DIRECTORY / "portfolio.csv") == 44671.15
 
 
-def test_portfolio_cost_missing_values(capfd):
+def test_portfolio_cost_missing_values(caplog):
     """
     Tests if portfolio_cost raises a ValueError if there are blank lines in the file.
     """
     cost = portfolio_cost(DATA_DIRECTORY / "missing.csv")
-    out, err = capfd.readouterr()
+    for record in caplog.records:
+        assert record.levelname == "INFO"
 
     assert cost == 27381.15
-    assert (
-        out.strip("\n")
-        == "Row 4: Bad row {'name': 'MSFT', 'shares': '', 'price': '51.23'}\n\
-Row 7: Bad row {'name': 'IBM', 'shares': '', 'price': '70.44'}"
-    )
 
 
 def test_portfolio_cost_different_headers():
@@ -31,15 +27,12 @@ def test_portfolio_cost_different_headers():
     assert portfolio_cost(DATA_DIRECTORY / "portfoliodate.csv") == 44671.15
 
 
-def test_portfolio_cost_incorrect_format(capfd):
+def test_portfolio_cost_incorrect_format(caplog):
     """
     Tests if portfolio_cost raises a ValueError if type conversion cannot be done.
     """
     cost = portfolio_cost(DATA_DIRECTORY / "portfolio3.csv")
-    out, err = capfd.readouterr()
+    for record in caplog.records:
+        assert record.levelname == "INFO"
 
     assert cost == 9121.25
-    assert (
-        out.strip("\n")
-        == "Row 2: Bad row {'name': 'HPQ', 'shares': '250', 'price': 'forty'}"
-    )

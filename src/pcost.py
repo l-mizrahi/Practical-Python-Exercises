@@ -1,6 +1,7 @@
 import csv
 from pathlib import Path
 from typing import Union
+import logging
 
 
 def portfolio_cost(file_path: Union[str, Path]) -> float:
@@ -26,6 +27,6 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
 
             # Exercise asks to catch the error like this
             except ValueError:
-                print(f"Row {rowno}: Bad row {rowdict}")
+                logging.info(f"Row {rowno}: Bad row {rowdict}")
 
     return total_cost
