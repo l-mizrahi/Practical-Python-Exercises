@@ -1,8 +1,16 @@
 import csv
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union, TypedDict
+from pathlib import Path
 
 
-def read_portfolio(file_path: str) -> List[Dict]:
+class PortDict(TypedDict, total=False):
+    name: str
+    shares: int
+    price: float
+    change: float
+
+
+def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
     """
     Reads a portfolio file and places each entry into a list.
 
@@ -11,20 +19,20 @@ def read_portfolio(file_path: str) -> List[Dict]:
                         Like in missing.csv. This was part of the exercise
     :return: Returns list of portfolio entries
     """
-    portfolio = []
+    portfolio: List[PortDict] = []
     with open(file_path) as f:
         rows = csv.reader(f)
-        headers = next(rows)
+        next(rows)
         for name, shares, price in rows:
             if not all([name, shares, price]):
                 raise ValueError("Cannot process blank lines.")
-            newrow = (name, int(shares), float(price))
-            portfolio.append(dict(zip(headers, newrow)))
+            pdict = PortDict(name=name, shares=int(shares), price=float(price))
+            portfolio.append(pdict)
 
     return portfolio
 
 
-def read_prices(file_path: str) -> Dict:
+def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     """
     Reads a prices file and places each entry into a dictionary.
 
@@ -41,7 +49,7 @@ def read_prices(file_path: str) -> Dict:
     return prices
 
 
-def calc_gain_loss(portfolio: List[Dict], prices: Dict) -> List[Dict]:
+def calc_gain_loss(portfolio: List[PortDict], prices: Dict) -> List[PortDict]:
     """
     Calculates the change in stock price from a given portfolio and the current price.
 
@@ -55,7 +63,7 @@ def calc_gain_loss(portfolio: List[Dict], prices: Dict) -> List[Dict]:
 
 
 def make_report(
-    portfolio: List[Dict], prices: Dict
+    portfolio: List[PortDict], prices: Dict[str, float]
 ) -> List[Tuple[str, int, float, float]]:
     """
     Calculates the gain/loss for the portfolio and formats it to be printed.
@@ -72,7 +80,7 @@ def make_report(
     return report_data
 
 
-def get_report(report_data: List[Tuple]) -> List[str]:
+def get_report(report_data: List[Tuple[str, int, float, float]]) -> List[str]:
     """
     Returns a report as a table.
 

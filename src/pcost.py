@@ -1,7 +1,9 @@
 import csv
+from pathlib import Path
+from typing import Union
 
 
-def portfolio_cost(file_path: str) -> float:
+def portfolio_cost(file_path: Union[str, Path]) -> float:
     """
     Calculates the cost of the portfolio by using the amount of shares
     and the corresponding price.
