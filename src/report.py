@@ -72,9 +72,9 @@ def make_report(
     return report_data
 
 
-def print_report(report_data: List[Tuple]) -> List[str]:
+def get_report(report_data: List[Tuple]) -> List[str]:
     """
-    Prints a report as a table.
+    Returns a report as a table.
 
     :param report_data: List of formatted portfolios
     :return: Returns the table as a list where each entry is a row of the table

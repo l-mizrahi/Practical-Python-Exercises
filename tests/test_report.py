@@ -1,6 +1,6 @@
 import pytest
 from src.report import (
-    print_report,
+    get_report,
     read_portfolio,
     read_prices,
     calc_gain_loss,
@@ -82,14 +82,14 @@ def test_make_report():
     assert report == expected
 
 
-def test_print_report():
+def test_get_report():
     """
-    Tests if print_report generates the correct looking table.
+    Tests if get_report generates the correct looking table.
     """
     prices = read_prices("data/prices.csv")
     portfolio = read_portfolio("data/portfolio.csv")
     report = make_report(portfolio, prices)
-    printed_report = print_report(report)
+    printed_report = get_report(report)
 
     expected = [
         "      Name     Shares      Price     Change",
