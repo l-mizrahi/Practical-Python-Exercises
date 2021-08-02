@@ -9,7 +9,7 @@ def parse_csv(
     types: List[Callable] = None,
     has_headers: bool = True,
     delimiter: str = ",",
-) -> List[object]:
+) -> List[Union[Dict, Tuple]]:
     """
     Parse a csv file into a list.
 
@@ -21,7 +21,7 @@ def parse_csv(
     :param delimiter: Type of delimiter. Defaults to ','
     :return: List of items in the file
     """
-    records: List[object] = []
+    records: List[Union[Dict, Tuple]] = []
     record: Union[Dict, Tuple]
     indices: List[int] = []
 
