@@ -19,8 +19,12 @@ def parse_csv(
     :param has_headers: Indicator if file has headers.
                         If False, creates a list of tuples otherwise a list of dictionaries
     :param delimiter: Type of delimiter. Defaults to ','
+    :raises RuntimeError: Raises RuntimeError if both select and has_headers is False.
     :return: List of items in the file
     """
+    if not has_headers and select:
+        raise RuntimeError("select argument requires column headers")
+
     records: List[Union[Dict, Tuple]] = []
     record: Union[Dict, Tuple]
     indices: List[int] = []

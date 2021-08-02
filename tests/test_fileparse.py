@@ -204,7 +204,7 @@ def test_parse_csv_select_noheaders():
     """
     Tests if parse_csv raises a RuntimeError if both select and has no headers.
     """
-    with pytest.raises(ValueError):
+    with pytest.raises(RuntimeError):
         parse_csv(
             DATA_DIRECTORY / "portfolio.csv",
             select=["name", "price"],
