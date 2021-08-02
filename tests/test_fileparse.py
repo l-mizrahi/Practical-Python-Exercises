@@ -4,6 +4,9 @@ from src.fileparse import parse_csv
 
 
 def test_parse_csv():
+    """
+    Tests if parse_csv reads a file correctly.
+    """
     portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv")
     expected = [
         {"name": "AA", "shares": "100", "price": "32.20"},
@@ -19,6 +22,9 @@ def test_parse_csv():
 
 
 def test_parse_csv_select():
+    """
+    Tests if parse_csv selects the correct columns.
+    """
     portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"])
     expected = [
         {"name": "AA", "shares": "100"},
@@ -34,6 +40,9 @@ def test_parse_csv_select():
 
 
 def test_parse_csv_types():
+    """
+    Tests if parse_csv converts columns to the correct types.
+    """
     portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", types=[str, int, float])
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
@@ -49,6 +58,9 @@ def test_parse_csv_types():
 
 
 def test_parse_csv_select_types():
+    """
+    Tests if parse_csv selects the correct columns and converts them correctly.
+    """
     portfolio = parse_csv(
         DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"], types=[str, int]
     )
@@ -66,6 +78,9 @@ def test_parse_csv_select_types():
 
 
 def test_parse_csv_noheaders():
+    """
+    Tests if parse_csv reads a file correctly with no headers.
+    """
     records = parse_csv(DATA_DIRECTORY / "prices.csv", has_headers=False)
     expected = [
         ("AA", "9.22"),
@@ -104,6 +119,9 @@ def test_parse_csv_noheaders():
 
 
 def test_parse_csv_types_noheaders():
+    """
+    Tests if parse_csv reads a file correctly with no headers and converts the columns correctly.
+    """
     records = parse_csv(
         DATA_DIRECTORY / "prices.csv", types=[str, float], has_headers=False
     )
@@ -144,6 +162,9 @@ def test_parse_csv_types_noheaders():
 
 
 def test_parse_csv_hasheaders():
+    """
+    Tests if parse_csv reads a file correctly with headers.
+    """
     records = parse_csv(DATA_DIRECTORY / "portfolio.csv", has_headers=True)
     expected = [
         {"name": "AA", "shares": "100", "price": "32.20"},
@@ -159,6 +180,9 @@ def test_parse_csv_hasheaders():
 
 
 def test_parse_csv_space_delimiter():
+    """
+    Tests if parse_csv reads a file correctly with different delimiters.
+    """
     expected = [
         {"name": "AA", "shares": "100", "price": "32.20"},
         {"name": "IBM", "shares": "50", "price": "91.10"},
@@ -177,6 +201,9 @@ def test_parse_csv_space_delimiter():
 
 
 def test_parse_csv_select_noheaders():
+    """
+    Tests if parse_csv raises a RuntimeError if both select and has no headers.
+    """
     with pytest.raises(ValueError):
         parse_csv(
             DATA_DIRECTORY / "portfolio.csv",
