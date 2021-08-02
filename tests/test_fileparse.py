@@ -1,4 +1,5 @@
 from src import DATA_DIRECTORY
+import pytest
 from src.fileparse import parse_csv
 
 
@@ -173,3 +174,12 @@ def test_parse_csv_space_delimiter():
 
     records = parse_csv(DATA_DIRECTORY / "portfolio.csv", delimiter=",")
     assert records == expected
+
+
+def test_parse_csv_select_noheaders():
+    with pytest.raises(ValueError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            select=["name", "price"],
+            has_headers=False,
+        )
