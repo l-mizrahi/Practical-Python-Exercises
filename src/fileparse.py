@@ -4,11 +4,12 @@ from src.report import PortDict
 from typing import List, Union
 
 
-def parse_csv(file_path: Union[str, Path]) -> List[PortDict]:
+def parse_csv(file_path: Union[str, Path], select: List[str]) -> List[PortDict]:
     """
     Parse a csv file into a list.
 
     :param file_path: Path to the csv file
+    :param select: Columns to select
     :return: List of items in the file
     """
     records: List[PortDict] = []

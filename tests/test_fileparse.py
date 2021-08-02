@@ -15,3 +15,18 @@ def test_parse_csv():
     ]
 
     assert portfolio == expected
+
+
+def test_parse_csv_select():
+    portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"])
+    expected = [
+        {"name": "AA", "shares": "100"},
+        {"name": "IBM", "shares": "50"},
+        {"name": "CAT", "shares": "150"},
+        {"name": "MSFT", "shares": "200"},
+        {"name": "GE", "shares": "95"},
+        {"name": "MSFT", "shares": "50"},
+        {"name": "IBM", "shares": "100"},
+    ]
+
+    assert portfolio == expected
