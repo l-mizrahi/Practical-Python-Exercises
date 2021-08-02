@@ -105,4 +105,8 @@ def portfolio_report(
     :param prices_file_path: Path to the prices file
     :return: Returns the table as a list where each entry is a row of the table
     """
-    pass
+    portfolio = read_portfolio(portfolio_file_path)
+    prices = read_prices(prices_file_path)
+    report = make_report(portfolio, prices)
+    printed_report = get_report(report)
+    return printed_report
