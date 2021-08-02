@@ -1,6 +1,7 @@
 from src import DATA_DIRECTORY
 import pytest
 from src.fileparse import parse_csv
+import logging
 
 
 def test_parse_csv():
@@ -210,3 +211,33 @@ def test_parse_csv_select_noheaders():
             select=["name", "price"],
             has_headers=False,
         )
+
+
+def test_parse_csv_log_bad_rows(caplog):
+    """
+    Tests if parse_csv logs rows which cannot be converted.
+    """
+    err_msg = "Invalid literal for int() with base 10: ''"
+    records = parse_csv(DATA_DIRECTORY / "missing.csv", types=[str, int, float])
+    expected_records = [
+        {"price": 32.2, "name": "AA", "shares": 100},
+        {"price": 91.1, "name": "IBM", "shares": 50},
+        {"price": 83.44, "name": "CAT", "shares": 150},
+        {"price": 40.37, "name": "GE", "shares": 95},
+        {"price": 65.1, "name": "MSFT", "shares": 50},
+    ]
+    expected_error = [
+        (
+            "root",
+            logging.ERROR,
+            "Couldn't convert row 4:['MSFT', '', '51.23']. " + err_msg,
+        ),
+        (
+            "root",
+            logging.ERROR,
+            "Couldn't convert row 7:['IBM', '', '70.44']. " + err_msg,
+        ),
+    ]
+
+    assert caplog.record_tuples == expected_error
+    assert records == expected_records
