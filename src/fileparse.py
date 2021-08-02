@@ -1,7 +1,7 @@
 import csv
 import logging
 from pathlib import Path
-from typing import List, Tuple, Union, Callable, Dict
+from typing import Any, List, Tuple, Union, Callable, Dict, cast
 
 
 def parse_csv(
@@ -11,7 +11,7 @@ def parse_csv(
     has_headers: bool = True,
     delimiter: str = ",",
     silence_errors=False,
-) -> List[Union[Dict, Tuple]]:
+) -> List[Any]:
     """
     Parse a csv file into a list.
 
@@ -27,8 +27,7 @@ def parse_csv(
     if not has_headers and select:
         raise RuntimeError("select argument requires column headers")
 
-    records: List[Union[Dict, Tuple]] = []
-    record: Union[Dict, Tuple]
+    records: List[Any] = []
     indices: List[int] = []
     start: int = 0
 
@@ -37,9 +36,12 @@ def parse_csv(
         if has_headers:
             headers = next(rows)
             start = 1
+            records = cast(List[Dict], records)
             if select:
                 indices = [headers.index(colname) for colname in select]
                 headers = select
+        else:
+            records = cast(List[Tuple], records)
 
         for rowno, row in enumerate(rows, start=start):
             if not row:
@@ -55,9 +57,8 @@ def parse_csv(
                     continue
 
             if has_headers:
-                record = dict(zip(headers, row))
+                records.append(dict(zip(headers, row)))
             else:
-                record = tuple(row)
-            records.append(record)
+                records.append(tuple(row))
 
     return records

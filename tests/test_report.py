@@ -1,4 +1,3 @@
-import pytest
 from src.report import (
     get_report,
     read_portfolio,
@@ -26,14 +25,6 @@ def test_read_portfolio():
     ]
 
     assert portfolio == expected
-
-
-def test_read_portfolio_missing_values():
-    """
-    Tests if read_portfolio raises a ValueError if there is a blank line in the file.
-    """
-    with pytest.raises(ValueError):
-        read_portfolio(DATA_DIRECTORY / "missing.csv")
 
 
 def test_read_prices():
