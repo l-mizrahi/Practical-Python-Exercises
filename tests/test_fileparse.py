@@ -32,8 +32,8 @@ def test_parse_csv_select():
     assert portfolio == expected
 
 
-def test_parse_csv_type():
-    portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", type=[str, int, float])
+def test_parse_csv_types():
+    portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", types=[str, int, float])
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
         {"name": "IBM", "shares": 50, "price": 91.1},
@@ -47,9 +47,9 @@ def test_parse_csv_type():
     assert portfolio == expected
 
 
-def test_parse_csv_select_type():
+def test_parse_csv_select_types():
     portfolio = parse_csv(
-        DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"], type=[str, int]
+        DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"], types=[str, int]
     )
     expected = [
         {"name": "AA", "shares": 100},

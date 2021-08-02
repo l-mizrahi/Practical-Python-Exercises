@@ -4,14 +4,14 @@ from typing import List, Union, Callable
 
 
 def parse_csv(
-    file_path: Union[str, Path], select: List[str] = None, type: List[Callable] = None
+    file_path: Union[str, Path], select: List[str] = None, types: List[Callable] = None
 ) -> List[object]:
     """
     Parse a csv file into a list.
 
     :param file_path: Path to the csv file
     :param select: Columns to select
-    :param type: List of types to convert each column
+    :param types: List of types to convert each column
     :return: List of items in the file
     """
     records: List[object] = []
@@ -29,6 +29,8 @@ def parse_csv(
                 continue
             if indices:
                 row = [row[index] for index in indices]
+            if types:
+                row = [func(val) for func, val in zip(types, row)]
             record = dict(zip(headers, row))
             records.append(record)
 
