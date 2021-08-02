@@ -26,7 +26,7 @@ def parse_csv(
     indices: List[int] = []
 
     with open(file_path) as f:
-        rows = csv.reader(f)
+        rows = csv.reader(f, delimiter=delimiter)
         if has_headers:
             headers = next(rows)
             if select:
