@@ -93,3 +93,16 @@ def get_report(report_data: List[Tuple[str, int, float, float]]) -> List[str]:
     for r in report_data:
         output.append("{:>10s} {:>10d} {:>10.2f} {:>10.2f}".format(*r))
     return output
+
+
+def portfolio_report(
+    portfolio_file_path: Union[str, Path], prices_file_path: Union[str, Path]
+) -> List[str]:
+    """
+    Create a tabulated report from a portfolio file and price file.
+
+    :param portfolio_file_path: Path to the portfolio file
+    :param prices_file_path: Path to the prices file
+    :return: Returns the table as a list where each entry is a row of the table
+    """
+    pass
