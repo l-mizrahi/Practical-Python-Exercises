@@ -244,6 +244,9 @@ def test_parse_csv_log_bad_rows(caplog):
 
 
 def test_parse_csv_silence_errors(caplog):
+    """
+    Tests if parse_csv does not print errors if silence_errors is True.
+    """
     records = parse_csv(
         DATA_DIRECTORY / "missing.csv", types=[str, int, float], silence_errors=True
     )
