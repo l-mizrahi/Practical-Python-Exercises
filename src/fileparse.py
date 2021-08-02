@@ -1,4 +1,5 @@
 import csv
+import logging
 from pathlib import Path
 from typing import List, Tuple, Union, Callable, Dict
 
@@ -28,22 +29,28 @@ def parse_csv(
     records: List[Union[Dict, Tuple]] = []
     record: Union[Dict, Tuple]
     indices: List[int] = []
+    start: int = 0
 
     with open(file_path) as f:
         rows = csv.reader(f, delimiter=delimiter)
         if has_headers:
             headers = next(rows)
+            start = 1
             if select:
                 indices = [headers.index(colname) for colname in select]
                 headers = select
 
-        for row in rows:
+        for rowno, row in enumerate(rows, start=start):
             if not row:
                 continue
             if indices:
                 row = [row[index] for index in indices]
             if types:
-                row = [func(val) for func, val in zip(types, row)]
+                try:
+                    row = [func(val) for func, val in zip(types, row)]
+                except ValueError as e:
+                    logging.exception(f"Couldn't convert row {rowno}:{row}. {e}")
+                    continue
 
             if has_headers:
                 record = dict(zip(headers, row))

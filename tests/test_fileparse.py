@@ -217,7 +217,7 @@ def test_parse_csv_log_bad_rows(caplog):
     """
     Tests if parse_csv logs rows which cannot be converted.
     """
-    err_msg = "Invalid literal for int() with base 10: ''"
+    err_msg = "invalid literal for int() with base 10: ''"
     records = parse_csv(DATA_DIRECTORY / "missing.csv", types=[str, int, float])
     expected_records = [
         {"price": 32.2, "name": "AA", "shares": 100},
