@@ -10,6 +10,7 @@ def parse_csv(
     types: List[Callable] = None,
     has_headers: bool = True,
     delimiter: str = ",",
+    silence_errors=False,
 ) -> List[Union[Dict, Tuple]]:
     """
     Parse a csv file into a list.
@@ -49,7 +50,8 @@ def parse_csv(
                 try:
                     row = [func(val) for func, val in zip(types, row)]
                 except ValueError as e:
-                    logging.exception(f"Couldn't convert row {rowno}:{row}. {e}")
+                    if not silence_errors:
+                        logging.exception(f"Couldn't convert row {rowno}:{row}. {e}")
                     continue
 
             if has_headers:
