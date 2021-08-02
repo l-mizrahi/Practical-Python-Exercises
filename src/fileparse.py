@@ -1,10 +1,9 @@
 import csv
 from pathlib import Path
-from src.report import PortDict
 from typing import List, Union
 
 
-def parse_csv(file_path: Union[str, Path], select: List[str]) -> List[PortDict]:
+def parse_csv(file_path: Union[str, Path], select: List[str] = None) -> List[object]:
     """
     Parse a csv file into a list.
 
@@ -12,14 +11,22 @@ def parse_csv(file_path: Union[str, Path], select: List[str]) -> List[PortDict]:
     :param select: Columns to select
     :return: List of items in the file
     """
-    records: List[PortDict] = []
+    records: List[object] = []
     with open(file_path) as f:
         rows = csv.reader(f)
-        next(rows)
-        for name, shares, price in rows:
-            if not all([name, shares, price]):
+        headers = next(rows)
+        if select:
+            indices = [headers.index(colname) for colname in select]
+            headers = select
+        else:
+            indices = []
+
+        for row in rows:
+            if not row:
                 continue
-            pdict = PortDict(name=name, shares=int(shares), price=float(price))
-            records.append(pdict)
+            if indices:
+                row = [row[index] for index in indices]
+            record = dict(zip(headers, row))
+            records.append(record)
 
     return records
