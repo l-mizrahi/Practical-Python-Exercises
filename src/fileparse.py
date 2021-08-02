@@ -1,14 +1,17 @@
 import csv
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Callable
 
 
-def parse_csv(file_path: Union[str, Path], select: List[str] = None) -> List[object]:
+def parse_csv(
+    file_path: Union[str, Path], select: List[str] = None, type: List[Callable] = None
+) -> List[object]:
     """
     Parse a csv file into a list.
 
     :param file_path: Path to the csv file
     :param select: Columns to select
+    :param type: List of types to convert each column
     :return: List of items in the file
     """
     records: List[object] = []
