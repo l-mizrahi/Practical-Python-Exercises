@@ -241,3 +241,19 @@ def test_parse_csv_log_bad_rows(caplog):
 
     assert caplog.record_tuples == expected_error
     assert records == expected_records
+
+
+def test_parse_csv_silence_errors(caplog):
+    records = parse_csv(
+        DATA_DIRECTORY / "missing.csv", types=[str, int, float], silence_errors=True
+    )
+    expected_records = [
+        {"price": 32.2, "name": "AA", "shares": 100},
+        {"price": 91.1, "name": "IBM", "shares": 50},
+        {"price": 83.44, "name": "CAT", "shares": 150},
+        {"price": 40.37, "name": "GE", "shares": 95},
+        {"price": 65.1, "name": "MSFT", "shares": 50},
+    ]
+
+    assert not caplog.record_tuples
+    assert records == expected_records
