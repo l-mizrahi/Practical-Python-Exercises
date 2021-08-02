@@ -4,7 +4,10 @@ from typing import List, Union, Callable
 
 
 def parse_csv(
-    file_path: Union[str, Path], select: List[str] = None, types: List[Callable] = None
+    file_path: Union[str, Path],
+    select: List[str] = None,
+    types: List[Callable] = None,
+    has_headers: bool = True,
 ) -> List[object]:
     """
     Parse a csv file into a list.
@@ -12,6 +15,7 @@ def parse_csv(
     :param file_path: Path to the csv file
     :param select: Columns to select
     :param types: List of types to convert each column
+    :param has_headers: Indicator if file has headers
     :return: List of items in the file
     """
     records: List[object] = []
