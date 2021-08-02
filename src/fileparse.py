@@ -8,6 +8,7 @@ def parse_csv(
     select: List[str] = None,
     types: List[Callable] = None,
     has_headers: bool = True,
+    delimiter: str = ",",
 ) -> List[object]:
     """
     Parse a csv file into a list.
@@ -17,6 +18,7 @@ def parse_csv(
     :param types: List of types to convert each column
     :param has_headers: Indicator if file has headers.
                         If False, creates a list of tuples otherwise a list of dictionaries
+    :param delimiter: Type of delimiter. Defaults to ','
     :return: List of items in the file
     """
     records: List[object] = []
