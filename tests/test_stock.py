@@ -8,15 +8,19 @@ def stock():
 
 
 def test_stock_init(stock):
+<<<<<<< HEAD
     """
     Tests if Stock initializes attributes correctly.
     """
+=======
+>>>>>>> 8ecf7aa (tests(ex4.2): add tests for Stock class)
     assert stock.name == "GOOG"
     assert stock.shares == 100
     assert stock.price == 490.10
 
 
 def test_stock_cost(stock):
+<<<<<<< HEAD
     """
     Tests if Stock calculates cost correctly.
     """
@@ -44,3 +48,11 @@ def test_stock_shares_setter(stock):
     """
     with pytest.raises(TypeError):
         stock.shares = 100.2
+=======
+    assert stock.cost() == 49010.0
+
+
+def test_stock_sell(stock):
+    stock.sell(25)
+    assert stock.shares == 75
+>>>>>>> 8ecf7aa (tests(ex4.2): add tests for Stock class)
