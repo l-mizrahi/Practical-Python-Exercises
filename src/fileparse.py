@@ -32,7 +32,12 @@ def parse_csv(
 
     if not has_headers and select:
         raise RuntimeError("'select' argument requires column headers")
-    if (select and convert_fn) and (select != list(convert_fn.keys())):
+    if (
+        select
+        and convert_fn
+        and isinstance(convert_fn, dict)
+        and set(select) != set(convert_fn.keys())
+    ):
         raise RuntimeError("keys of 'convert_fn' must be the same as 'select'")
     if has_headers and convert_fn and not isinstance(convert_fn, dict):
         raise RuntimeError(
@@ -42,14 +47,21 @@ def parse_csv(
     records: List[Any] = []
     indices: List[int] = []
     start: int = 0
+    file_is_path = False
 
     if isinstance(file_path_or_buffer, (str, Path)):
+        file_is_path = True
         file_path_or_buffer = open(file_path_or_buffer)
 
     rows = csv.reader(file_path_or_buffer, delimiter=delimiter)
     if has_headers:
         headers = next(rows)
-        if (convert_fn and not select) and (headers != list(convert_fn.keys())):
+        if (
+            convert_fn
+            and not select
+            and isinstance(convert_fn, dict)
+            and set(headers) != set(convert_fn.keys())
+        ):
             raise RuntimeError("keys of 'convert_fn' does not match keys in headers")
         start = 1
         if select:
@@ -84,5 +96,8 @@ def parse_csv(
                         logging.exception(f"Couldn't convert row {rowno}:{row}")
                     continue
             records.append(tuple(row))
+
+    if file_is_path:
+        file_path_or_buffer.close()
 
     return records
