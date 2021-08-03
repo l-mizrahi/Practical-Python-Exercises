@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union, TypedDict, Any
+from typing import List, Dict, Tuple, Union, TypedDict, Any, cast
 from pathlib import Path
 from .fileparse import parse_csv
 
@@ -27,6 +27,7 @@ def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
         select=["name", "shares", "price"],
         convert_fn={"name": str, "shares": int, "price": float},
     )
+    portfolio = cast(List[Dict[str, Any]], portfolio)
     portdicts = [to_portdict(p) for p in portfolio]
     return portdicts
 
@@ -39,7 +40,8 @@ def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     :return: Returns a dictionary of prices and their stock names
     """
     prices = parse_csv(file_path, convert_fn=[str, float], has_headers=False)
-    return dict(prices)
+    prices = cast(List[Tuple], prices)
+    return {name: price for name, price in prices}
 
 
 def calc_gain_loss(portfolio: List[PortDict], prices: Dict) -> List[PortDict]:

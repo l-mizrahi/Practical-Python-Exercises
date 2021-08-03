@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union
+from typing import Any, Dict, Union, cast, List
 from .fileparse import parse_csv
 
 
@@ -16,6 +16,7 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
         select=["shares", "price"],
         convert_fn={"shares": int, "price": float},
     )
+    portfolio = cast(List[Dict[str, Any]], portfolio)
     total_cost = sum([p["shares"] * p["price"] for p in portfolio])
 
     return total_cost

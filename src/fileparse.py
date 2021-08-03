@@ -1,7 +1,7 @@
 import csv
 import logging
 from pathlib import Path
-from typing import Any, List, TextIO, Union
+from typing import Any, List, TextIO, Union, Dict
 
 
 def parse_csv(
@@ -11,7 +11,7 @@ def parse_csv(
     has_headers: bool = True,
     delimiter: str = ",",
     verbose: bool = True,
-) -> List[Any]:
+) -> Union[List[tuple], List[Dict[str, Any]]]:
     """
     Parse a csv file into a list.
 
