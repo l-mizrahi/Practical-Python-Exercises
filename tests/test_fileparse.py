@@ -167,6 +167,33 @@ def test_parse_csv_convert_fn_noheaders():
     assert records == expected
 
 
+def test_parse_csv_convert_fn_noheaders_log(caplog):
+    """
+    Tests if parse_csv reads a file with no headers and logs errors when columns can't be converted.
+    """
+    records = parse_csv(
+        DATA_DIRECTORY / "portfolio3.csv",
+        convert_fn=[str, int, float],
+        has_headers=False,
+    )
+    expected_records = [("AA", 50, 27.10), ("MSFT", 25, 50.15), ("GE", 125, 52.10)]
+    expected_error = [
+        (
+            "root",
+            logging.ERROR,
+            "Couldn't convert row 0:['name', 'shares', 'price']",
+        ),
+        (
+            "root",
+            logging.ERROR,
+            "Couldn't convert row 2:['HPQ', '250', 'forty']",
+        ),
+    ]
+
+    assert caplog.record_tuples == expected_error
+    assert records == expected_records
+
+
 def test_parse_csv_hasheaders():
     """
     Tests if parse_csv reads a file correctly with headers.
