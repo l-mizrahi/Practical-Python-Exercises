@@ -1,13 +1,13 @@
 import csv
 import logging
 from pathlib import Path
-from typing import Any, List, TextIO, Union, Dict
+from typing import Any, Callable, List, TextIO, Union, Dict
 
 
 def parse_csv(
     file_path_or_buffer: Union[str, Path, TextIO],
     select: List[str] = None,
-    convert_fn: Any = None,  # Using Union[List[Callable], Dict[str, Callable]] breaks everything :(
+    convert_fn: Union[List[Callable], Dict[str, Callable]] = None,
     has_headers: bool = True,
     delimiter: str = ",",
     verbose: bool = True,
@@ -78,9 +78,10 @@ def parse_csv(
             rowdict = dict(zip(headers, row))
             if convert_fn:
                 try:
-                    rowdict = {
-                        key: func(rowdict[key]) for key, func in convert_fn.items()
-                    }
+                    if isinstance(convert_fn, dict):
+                        rowdict = {
+                            key: func(rowdict[key]) for key, func in convert_fn.items()
+                        }
                 except ValueError:
                     if verbose:
                         logging.exception(f"Couldn't convert row {rowno}:{row}")
@@ -90,7 +91,8 @@ def parse_csv(
         else:
             if convert_fn:
                 try:
-                    row = [func(val) for func, val in zip(convert_fn, row)]
+                    if isinstance(convert_fn, list):
+                        row = [func(val) for func, val in zip(convert_fn, row)]
                 except ValueError:
                     if verbose:
                         logging.exception(f"Couldn't convert row {rowno}:{row}")
