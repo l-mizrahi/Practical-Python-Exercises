@@ -11,7 +11,6 @@ class PortDict(TypedDict, total=False):
 
 
 def to_portdict(data: Dict[str, Any]) -> PortDict:
-    pdict = PortDict()
     pdict = PortDict(name=data["name"], shares=data["shares"], price=data["price"])
     return pdict
 
@@ -24,7 +23,9 @@ def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
     :return: Returns list of portfolio entries
     """
     portfolio = parse_csv(
-        file_path, select=["name", "shares", "price"], types=[str, int, float]
+        file_path,
+        select=["name", "shares", "price"],
+        convert_fn={"name": str, "shares": int, "price": float},
     )
     portdicts = [to_portdict(p) for p in portfolio]
     return portdicts
@@ -37,7 +38,7 @@ def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     :param file_path: Path to the prices file
     :return: Returns a dictionary of prices and their stock names
     """
-    prices = parse_csv(file_path, types=[str, float], has_headers=False)
+    prices = parse_csv(file_path, convert_fn=[str, float], has_headers=False)
     return dict(prices)
 
 

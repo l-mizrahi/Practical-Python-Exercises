@@ -40,11 +40,14 @@ def test_parse_csv_select():
     assert portfolio == expected
 
 
-def test_parse_csv_types():
+def test_parse_csv_convert_fn():
     """
-    Tests if parse_csv converts columns to the correct types.
+    Tests if parse_csv converts columns to the correct convert_fn.
     """
-    portfolio = parse_csv(DATA_DIRECTORY / "portfolio.csv", types=[str, int, float])
+    portfolio = parse_csv(
+        DATA_DIRECTORY / "portfolio.csv",
+        convert_fn={"name": str, "shares": int, "price": float},
+    )
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
         {"name": "IBM", "shares": 50, "price": 91.1},
@@ -58,12 +61,14 @@ def test_parse_csv_types():
     assert portfolio == expected
 
 
-def test_parse_csv_select_types():
+def test_parse_csv_select_convert_fn():
     """
     Tests if parse_csv selects the correct columns and converts them correctly.
     """
     portfolio = parse_csv(
-        DATA_DIRECTORY / "portfolio.csv", select=["name", "shares"], types=[str, int]
+        DATA_DIRECTORY / "portfolio.csv",
+        select=["name", "shares"],
+        convert_fn={"name": str, "shares": int},
     )
     expected = [
         {"name": "AA", "shares": 100},
@@ -119,12 +124,12 @@ def test_parse_csv_noheaders():
     assert records == expected
 
 
-def test_parse_csv_types_noheaders():
+def test_parse_csv_convert_fn_noheaders():
     """
     Tests if parse_csv reads a file correctly with no headers and converts the columns correctly.
     """
     records = parse_csv(
-        DATA_DIRECTORY / "prices.csv", types=[str, float], has_headers=False
+        DATA_DIRECTORY / "prices.csv", convert_fn=[str, float], has_headers=False
     )
     expected = [
         ("AA", 9.22),
@@ -203,7 +208,7 @@ def test_parse_csv_space_delimiter():
 
 def test_parse_csv_select_noheaders():
     """
-    Tests if parse_csv raises a RuntimeError if both select and has no headers.
+    Tests if parse_csv raises a RuntimeError if select is given and has no headers.
     """
     with pytest.raises(RuntimeError):
         parse_csv(
@@ -217,8 +222,10 @@ def test_parse_csv_log_bad_rows(caplog):
     """
     Tests if parse_csv logs rows which cannot be converted.
     """
-    err_msg = "invalid literal for int() with base 10: ''"
-    records = parse_csv(DATA_DIRECTORY / "missing.csv", types=[str, int, float])
+    records = parse_csv(
+        DATA_DIRECTORY / "missing.csv",
+        convert_fn={"name": str, "shares": int, "price": float},
+    )
     expected_records = [
         {"price": 32.2, "name": "AA", "shares": 100},
         {"price": 91.1, "name": "IBM", "shares": 50},
@@ -230,12 +237,12 @@ def test_parse_csv_log_bad_rows(caplog):
         (
             "root",
             logging.ERROR,
-            "Couldn't convert row 4:['MSFT', '', '51.23']. " + err_msg,
+            "Couldn't convert row 4:['MSFT', '', '51.23']",
         ),
         (
             "root",
             logging.ERROR,
-            "Couldn't convert row 7:['IBM', '', '70.44']. " + err_msg,
+            "Couldn't convert row 7:['IBM', '', '70.44']",
         ),
     ]
 
@@ -243,12 +250,14 @@ def test_parse_csv_log_bad_rows(caplog):
     assert records == expected_records
 
 
-def test_parse_csv_silence_errors(caplog):
+def test_parse_csv_verbose(caplog):
     """
-    Tests if parse_csv does not print errors if silence_errors is True.
+    Tests if parse_csv does not print errors if verbose is False.
     """
     records = parse_csv(
-        DATA_DIRECTORY / "missing.csv", types=[str, int, float], silence_errors=True
+        DATA_DIRECTORY / "missing.csv",
+        convert_fn={"name": str, "shares": int, "price": float},
+        verbose=False,
     )
     expected_records = [
         {"price": 32.2, "name": "AA", "shares": 100},
@@ -267,7 +276,9 @@ def test_parse_csv_file_object():
     Tests if parse_csv reads file-like objects correctly.
     """
     with open(DATA_DIRECTORY / "portfolio.csv") as file:
-        portfolio = parse_csv(file, types=[str, int, float])
+        portfolio = parse_csv(
+            file, convert_fn={"name": str, "shares": int, "price": float}
+        )
 
     expected = [
         {"name": "AA", "shares": 100, "price": 32.2},
@@ -280,3 +291,60 @@ def test_parse_csv_file_object():
     ]
 
     assert portfolio == expected
+
+
+def test_parse_csv_select_convert_fn_length():
+    """
+    Tests if parse_csv raises RuntimeError if select and convert_fn have different lengths.
+    """
+    with pytest.raises(RuntimeError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            select=["name", "price"],
+            convert_fn={"name": str, "shares": int, "price": float},
+        )
+
+
+def test_parse_csv_headers_convert_fn_length():
+    """
+    Tests if parse_csv raises RuntimeError if convert_fn length doesn't match headers length.
+    """
+    with pytest.raises(RuntimeError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            convert_fn={"name": str, "shares": int},
+        )
+
+
+def test_parse_csv_headers_convert_fn_not_dict():
+    """
+    Tests if parse_csv raises RuntimeError if convert_fn is not a dictionary when there are headers.
+    """
+    with pytest.raises(RuntimeError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            convert_fn=[str, int, float],
+        )
+
+
+def test_parse_csv_headers_convert_fn_keys():
+    """
+    Tests parse_csv raises RuntimeError if convert_fn has key which is not in the header.
+    """
+    with pytest.raises(RuntimeError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            convert_fn={"name": str, "stocks": int, "price": float},
+        )
+
+
+def test_parse_csv_select_convert_fn_keys():
+    """
+    Tests parse_csv raises RuntimeError if convert_fn and select do not have the same keys.
+    """
+    with pytest.raises(RuntimeError):
+        parse_csv(
+            DATA_DIRECTORY / "portfolio.csv",
+            select=["name", "shares", "price"],
+            convert_fn={"name": str, "stocks": int, "price": float},
+        )

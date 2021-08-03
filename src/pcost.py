@@ -11,7 +11,11 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
     :param file_path: Path to the portfolio file
     :return: The cost of the portfolio
     """
-    portfolio = parse_csv(file_path, select=["shares", "price"], types=[int, float])
+    portfolio = parse_csv(
+        file_path,
+        select=["shares", "price"],
+        convert_fn={"shares": int, "price": float},
+    )
     total_cost = sum([p["shares"] * p["price"] for p in portfolio])
 
     return total_cost
