@@ -1,36 +1,27 @@
-from typing import List, Dict, Tuple, Union, TypedDict, Any, cast
+from typing import List, Dict, Tuple, Union, cast
 from pathlib import Path
 from .fileparse import parse_csv
 from .stock import Stock
 
 
-class PortDict(TypedDict, total=False):
-    name: str
-    shares: int
-    price: float
-    change: float
-
-
-def to_portdict(data: Dict[str, Any]) -> PortDict:
-    pdict = PortDict(name=data["name"], shares=data["shares"], price=data["price"])
-    return pdict
-
-
-def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
+def read_portfolio(file_path: Union[str, Path]) -> List[Stock]:
     """
     Reads a portfolio file and places each entry into a list.
 
     :param file_path: Path to the portfolio file
     :return: Returns list of Stock entries
     """
-    portfolio = parse_csv(
+    portdict = parse_csv(
         file_path,
         select=["name", "shares", "price"],
         convert_fn={"name": str, "shares": int, "price": float},
     )
-    portfolio = cast(List[Dict[str, Any]], portfolio)
-    portdicts = [to_portdict(p) for p in portfolio]
-    return portdicts
+    portfolio = [
+        Stock(pd["name"], pd["shares"], pd["price"])
+        for pd in portdict
+        if isinstance(pd, dict)
+    ]
+    return portfolio
 
 
 def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:

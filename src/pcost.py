@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Union, cast, List
+from typing import Union
 from .fileparse import parse_csv
 from .stock import Stock
 
@@ -12,12 +12,16 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
     :param file_path: Path to the portfolio file
     :return: The cost of the portfolio
     """
-    portfolio = parse_csv(
+    portdict = parse_csv(
         file_path,
         select=["shares", "price"],
         convert_fn={"shares": int, "price": float},
     )
-    portfolio = cast(List[Dict[str, Any]], portfolio)
-    total_cost = sum([p["shares"] * p["price"] for p in portfolio])
+    portfolio = [
+        Stock(name="", shares=pd["shares"], price=pd["price"])
+        for pd in portdict
+        if isinstance(pd, dict)
+    ]
+    total_cost = sum([p.shares * p.price for p in portfolio])
 
     return total_cost
