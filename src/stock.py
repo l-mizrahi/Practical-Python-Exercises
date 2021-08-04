@@ -1,6 +1,10 @@
 class Stock:
+    name: str
+    shares: int
+    price: float
+    change: float
+
     def __init__(self, name: str, shares: int, price: float) -> None:
-<<<<<<< HEAD
         self.name: str = name
         self._shares: int = shares
         self.price: float = price
@@ -56,12 +60,4 @@ class Stock:
 
     def __repr__(self) -> str:
         return f"Stock(name='{self.name}', shares={self.shares}, price={self.price})"
-=======
-        pass
 
-    def cost(self) -> float:
-        pass
-
-    def sell(self, nshares: int) -> None:
-        pass
->>>>>>> 8ecf7aa (tests(ex4.2): add tests for Stock class)
