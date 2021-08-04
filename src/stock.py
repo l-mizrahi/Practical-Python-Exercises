@@ -60,4 +60,3 @@ class Stock:
 
     def __repr__(self) -> str:
         return f"Stock(name='{self.name}', shares={self.shares}, price={self.price})"
-
