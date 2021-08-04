@@ -2,6 +2,7 @@ from typing import List, Dict, Tuple, Union, cast
 from pathlib import Path
 from .fileparse import parse_csv
 from .stock import Stock
+from .tableformat import CSVTableFormatter, TableFormatter, TextTableFormatter
 
 
 def read_portfolio(file_path: Union[str, Path]) -> List[Stock]:
@@ -67,33 +68,45 @@ def make_report(
     return report_data
 
 
-def get_report(report_data: List[Tuple[str, int, float, float]]) -> List[str]:
+def get_report(
+    report_data: List[Tuple[str, int, float, float]],
+    formatter: TableFormatter,
+) -> List[str]:
     """
     Returns a report as a table.
 
     :param report_data: List of formatted portfolios
+    :param formatter: Formatter object to format the report.
     :return: Returns the table as a list where each entry is a row of the table
     """
-    output = []
-    output.append(f"{'Name':>10s} {'Shares':>10s} {'Price':>10s} {'Change':>10s}")
-    output.append(" ".join(["-" * 10] * 4))
-    for r in report_data:
-        output.append("{:>10s} {:>10d} {:>10.2f} {:>10.2f}".format(*r))
-    return output
+    headings = formatter.headings(("Name", "Shares", "Price", "Change"))
+    rows = formatter.rows(report_data)
+    return headings + rows
 
 
 def portfolio_report(
-    portfolio_file_path: Union[str, Path], prices_file_path: Union[str, Path]
+    portfolio_file_path: Union[str, Path],
+    prices_file_path: Union[str, Path],
+    fmt: str = "txt",
 ) -> List[str]:
     """
     Create a tabulated report from a portfolio file and price file.
 
     :param portfolio_file_path: Path to the portfolio file
     :param prices_file_path: Path to the prices file
+    :param fmt: Format for the report to printed as. Can be one of 'txt' or 'csv'
     :return: Returns the table as a list where each entry is a row of the table
     """
+    formatter: Union[TextTableFormatter, CSVTableFormatter]
+    if fmt == "txt":
+        formatter = TextTableFormatter()
+    elif fmt == "csv":
+        formatter = CSVTableFormatter()
+    else:
+        raise RuntimeError(f"Unknown format {fmt}")
+
     portfolio = read_portfolio(portfolio_file_path)
     prices = read_prices(prices_file_path)
     report = make_report(portfolio, prices)
-    printed_report = get_report(report)
+    printed_report = get_report(report, formatter=formatter)
     return printed_report
