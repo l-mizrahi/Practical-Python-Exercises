@@ -29,3 +29,7 @@ def test_stock_sell(stock):
     """
     stock.sell(25)
     assert stock.shares == 75
+
+
+def test_stock_repr(stock):
+    assert repr(stock) == "Stock('GOOG', 100, 490.1)"
