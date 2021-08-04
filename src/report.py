@@ -1,6 +1,6 @@
-import csv
-from typing import List, Dict, Tuple, Union, TypedDict
+from typing import List, Dict, Tuple, Union, TypedDict, Any, cast
 from pathlib import Path
+from .fileparse import parse_csv
 
 
 class PortDict(TypedDict, total=False):
@@ -10,26 +10,26 @@ class PortDict(TypedDict, total=False):
     change: float
 
 
+def to_portdict(data: Dict[str, Any]) -> PortDict:
+    pdict = PortDict(name=data["name"], shares=data["shares"], price=data["price"])
+    return pdict
+
+
 def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
     """
     Reads a portfolio file and places each entry into a list.
 
     :param file_path: Path to the portfolio file
-    :raises ValueError: Raises error if line in the file is empty
-                        Like in missing.csv. This was part of the exercise
     :return: Returns list of portfolio entries
     """
-    portfolio: List[PortDict] = []
-    with open(file_path) as f:
-        rows = csv.reader(f)
-        next(rows)
-        for name, shares, price in rows:
-            if not all([name, shares, price]):
-                raise ValueError("Cannot process blank lines.")
-            pdict = PortDict(name=name, shares=int(shares), price=float(price))
-            portfolio.append(pdict)
-
-    return portfolio
+    portfolio = parse_csv(
+        file_path,
+        select=["name", "shares", "price"],
+        convert_fn={"name": str, "shares": int, "price": float},
+    )
+    portfolio = cast(List[Dict[str, Any]], portfolio)
+    portdicts = [to_portdict(p) for p in portfolio]
+    return portdicts
 
 
 def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
@@ -39,14 +39,9 @@ def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     :param file_path: Path to the prices file
     :return: Returns a dictionary of prices and their stock names
     """
-    prices = {}
-    with open(file_path) as f:
-        rows = csv.reader(f)
-        for name, price in rows:
-            if not all([name, price]):
-                continue
-            prices[name] = float(price)
-    return prices
+    prices = parse_csv(file_path, convert_fn=[str, float], has_headers=False)
+    prices = cast(List[Tuple], prices)
+    return {name: price for name, price in prices}
 
 
 def calc_gain_loss(portfolio: List[PortDict], prices: Dict) -> List[PortDict]:
@@ -93,3 +88,20 @@ def get_report(report_data: List[Tuple[str, int, float, float]]) -> List[str]:
     for r in report_data:
         output.append("{:>10s} {:>10d} {:>10.2f} {:>10.2f}".format(*r))
     return output
+
+
+def portfolio_report(
+    portfolio_file_path: Union[str, Path], prices_file_path: Union[str, Path]
+) -> List[str]:
+    """
+    Create a tabulated report from a portfolio file and price file.
+
+    :param portfolio_file_path: Path to the portfolio file
+    :param prices_file_path: Path to the prices file
+    :return: Returns the table as a list where each entry is a row of the table
+    """
+    portfolio = read_portfolio(portfolio_file_path)
+    prices = read_prices(prices_file_path)
+    report = make_report(portfolio, prices)
+    printed_report = get_report(report)
+    return printed_report
