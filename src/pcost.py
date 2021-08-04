@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict, Union, cast, List
 from .fileparse import parse_csv
+from .stock import Stock
 
 
 def portfolio_cost(file_path: Union[str, Path]) -> float:

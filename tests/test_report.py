@@ -7,6 +7,7 @@ from src.report import (
     portfolio_report,
 )
 from src import DATA_DIRECTORY
+from src.stock import Stock
 
 
 def test_read_portfolio():
@@ -15,13 +16,13 @@ def test_read_portfolio():
     """
     portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
     expected = [
-        {"name": "AA", "shares": 100, "price": 32.2},
-        {"name": "IBM", "shares": 50, "price": 91.1},
-        {"name": "CAT", "shares": 150, "price": 83.44},
-        {"name": "MSFT", "shares": 200, "price": 51.23},
-        {"name": "GE", "shares": 95, "price": 40.37},
-        {"name": "MSFT", "shares": 50, "price": 65.1},
-        {"name": "IBM", "shares": 100, "price": 70.44},
+        Stock(name="AA", shares=100, price=32.2),
+        Stock(name="IBM", shares=50, price=91.1),
+        Stock(name="CAT", shares=150, price=83.44),
+        Stock(name="MSFT", shares=200, price=51.23),
+        Stock(name="GE", shares=95, price=40.37),
+        Stock(name="MSFT", shares=50, price=65.1),
+        Stock(name="IBM", shares=100, price=70.44),
     ]
 
     assert portfolio == expected
@@ -41,7 +42,7 @@ def test_read_prices():
 def test_calc_gain_loss():
     """
     Tests if calc_gain_loss calculates the change in price correctly
-    and inserts it into the new dictionary.
+    and inserts it into the list of Stocks.
     """
     prices = read_prices(DATA_DIRECTORY / "prices.csv")
     portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
@@ -50,7 +51,7 @@ def test_calc_gain_loss():
 
     gain_loss = calc_gain_loss(portfolio, prices)
 
-    assert all([round(gl["change"], 2) == e for gl, e in zip(gain_loss, expected)])
+    assert all([gl.change == e for gl, e in zip(gain_loss, expected)])
 
 
 def test_make_report():

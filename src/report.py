@@ -1,6 +1,7 @@
 from typing import List, Dict, Tuple, Union, TypedDict, Any, cast
 from pathlib import Path
 from .fileparse import parse_csv
+from .stock import Stock
 
 
 class PortDict(TypedDict, total=False):
@@ -20,7 +21,7 @@ def read_portfolio(file_path: Union[str, Path]) -> List[PortDict]:
     Reads a portfolio file and places each entry into a list.
 
     :param file_path: Path to the portfolio file
-    :return: Returns list of portfolio entries
+    :return: Returns list of Stock entries
     """
     portfolio = parse_csv(
         file_path,
@@ -44,21 +45,21 @@ def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     return {name: price for name, price in prices}
 
 
-def calc_gain_loss(portfolio: List[PortDict], prices: Dict) -> List[PortDict]:
+def calc_gain_loss(portfolio: List[Stock], prices: Dict) -> List[Stock]:
     """
     Calculates the change in stock price from a given portfolio and the current price.
 
     :param portfolio: Portfolio list
     :param prices: Dictionary of prices
-    :return: Returns a new portfolio dictionary with the change in price
+    :return: Returns a new portfolio list with the change in price
     """
     for port in portfolio:
-        port["change"] = round(-(port["price"] - prices[port["name"]]), 2)
+        port.change = round(-(port.price - prices[port.name]), 2)
     return portfolio
 
 
 def make_report(
-    portfolio: List[PortDict], prices: Dict[str, float]
+    portfolio: List[Stock], prices: Dict[str, float]
 ) -> List[Tuple[str, int, float, float]]:
     """
     Calculates the gain/loss for the portfolio and formats it to be printed.
@@ -71,7 +72,7 @@ def make_report(
     report_data = []
 
     for gl in gain_loss:
-        report_data.append((gl["name"], gl["shares"], prices[gl["name"]], gl["change"]))
+        report_data.append((gl.name, gl.shares, prices[gl.name], gl.change))
     return report_data
 
 
