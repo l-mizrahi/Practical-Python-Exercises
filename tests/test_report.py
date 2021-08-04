@@ -1,3 +1,4 @@
+from src.tableformat import CSVTableFormatter, TextTableFormatter
 from src.report import (
     get_report,
     read_portfolio,
@@ -8,6 +9,7 @@ from src.report import (
 )
 from src import DATA_DIRECTORY
 from src.stock import Stock
+import pytest
 
 
 def test_read_portfolio():
@@ -82,7 +84,7 @@ def test_get_report():
     prices = read_prices(DATA_DIRECTORY / "prices.csv")
     portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
     report = make_report(portfolio, prices)
-    printed_report = get_report(report)
+    printed_report = get_report(report, formatter=TextTableFormatter())
 
     expected = [
         "      Name     Shares      Price     Change",
@@ -96,6 +98,28 @@ def test_get_report():
         "       IBM        100     106.28      35.84",
     ]
 
+    assert printed_report == expected
+
+
+def test_get_report_csv():
+    """
+    Tests if get_report generates the correct looking table given a csv formatter.
+    """
+    prices = read_prices(DATA_DIRECTORY / "prices.csv")
+    portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
+    report = make_report(portfolio, prices)
+    printed_report = get_report(report, formatter=CSVTableFormatter())
+
+    expected = [
+        "Name,Shares,Price,Change",
+        "AA,100,9.22,-22.98",
+        "IBM,50,106.28,15.18",
+        "CAT,150,35.46,-47.98",
+        "MSFT,200,20.89,-30.34",
+        "GE,95,13.48,-26.89",
+        "MSFT,50,20.89,-44.21",
+        "IBM,100,106.28,35.84",
+    ]
     assert printed_report == expected
 
 
@@ -116,3 +140,28 @@ def test_portfolio_report():
     ]
 
     assert report == expected
+
+
+def test_portfolio_report_csv():
+    expected = [
+        "Name,Shares,Price,Change",
+        "AA,100,9.22,-22.98",
+        "IBM,50,106.28,15.18",
+        "CAT,150,35.46,-47.98",
+        "MSFT,200,20.89,-30.34",
+        "GE,95,13.48,-26.89",
+        "MSFT,50,20.89,-44.21",
+        "IBM,100,106.28,35.84",
+    ]
+    report = portfolio_report(
+        DATA_DIRECTORY / "portfolio.csv", DATA_DIRECTORY / "prices.csv", fmt="csv"
+    )
+
+    assert report == expected
+
+
+def test_portfolio_fmt():
+    with pytest.raises(RuntimeError):
+        portfolio_report(
+            DATA_DIRECTORY / "portfolio.csv", DATA_DIRECTORY / "prices.csv", fmt="html"
+        )
