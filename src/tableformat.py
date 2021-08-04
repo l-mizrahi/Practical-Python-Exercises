@@ -13,18 +13,18 @@ class TableFormatter:
         Format the table headings.
 
         :param headers: The headers of the table
-        :raises NotImplementedError: If headings() has not been overloaded
+        :raises NotImplementedError: If headings() has not been overridden
         :return: The formatted headers
         """
         raise NotImplementedError()
 
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
         """
-        Format a single row of table data.
+        Format rows of table data.
 
-        :param rowdata: A single row of the table to be formatted
-        :raises NotImplementedError: If row() has not been overloaded
-        :return: The formatted row
+        :param rowdata: Rows of the table to be formatted
+        :raises NotImplementedError: If row() has not been overridden
+        :return: The formatted rows
         """
         raise NotImplementedError()
 
@@ -36,6 +36,8 @@ class TableFormatter:
     ) -> List[str]:
         """
         Formats data as a table.
+        :param data: The report data to create the table.
+        :raise ValueError: Raise error if there is only one row in data.
         """
         if len(data) < 2:
             raise ValueError(
@@ -54,6 +56,12 @@ class TextTableFormatter(TableFormatter):
     """
 
     def headings(self, headers: Tuple[str, str, str, str]) -> List[str]:
+        """
+        Format the table headings in text format.
+
+        :param headers: The headers of the table
+        :return: The formatted headers
+        """
         fmt_str = " ".join(["{:>10s}"] * len(headers))
         dashes = " ".join(["-" * 10] * len(headers))
         try:
@@ -64,6 +72,12 @@ class TextTableFormatter(TableFormatter):
         return [headers_fmt, dashes]
 
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
+        """
+        Format rows of table data in text format.
+
+        :param rowdata: Rows of the table to be formatted
+        :return: The formatted rows
+        """
         output: List[str] = []
         fmt_str = " ".join(["{:>10s}"] * len(rowdata[0]))
         for row in rowdata:
@@ -78,10 +92,22 @@ class CSVTableFormatter(TableFormatter):
     """
 
     def headings(self, headers: Tuple[str, str, str, str]) -> List[str]:
+        """
+        Format the table headings in CSV format.
+
+        :param headers: The headers of the table
+        :return: The formatted headers
+        """
         headers_cap = list(map(lambda x: x.capitalize(), headers))
         return [",".join(headers_cap)]
 
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
+        """
+        Format rows of table data in CSV format.
+
+        :param rowdata: Rows of the table to be formatted
+        :return: The formatted rows
+        """
         output: List[str] = []
         for row in rowdata:
             rowstr = [str(r) for r in row]

@@ -59,6 +59,9 @@ def test_csv_table_formatter(data):
 
 
 def test_table_formatter_no_data_or_headers():
+    """
+    Test if TableFormatter raises a ValueError if there is only one row.
+    """
     txt_formatter = TextTableFormatter()
     with pytest.raises(ValueError):
         txt_formatter.format([("Name", "Shares", "Price", "Change")])
