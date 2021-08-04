@@ -1,13 +1,13 @@
 import csv
 import logging
 from pathlib import Path
-from typing import Any, Callable, List, TextIO, Union, Dict
+from typing import Any, Callable, List, Optional, TextIO, Union, Dict
 
 
 def parse_csv(
     file_path_or_buffer: Union[str, Path, TextIO],
     select: List[str] = None,
-    convert_fn: Union[List[Callable], Dict[str, Callable]] = None,
+    convert_fn: Optional[Union[List[Callable], Dict[str, Callable]]] = None,
     has_headers: bool = True,
     delimiter: str = ",",
     verbose: bool = True,
@@ -32,12 +32,7 @@ def parse_csv(
 
     if not has_headers and select:
         raise RuntimeError("'select' argument requires column headers")
-    if (
-        select
-        and convert_fn
-        and isinstance(convert_fn, dict)
-        and set(select) != set(convert_fn.keys())
-    ):
+    if select and isinstance(convert_fn, dict) and set(select) != convert_fn.keys():
         raise RuntimeError("keys of 'convert_fn' must be the same as 'select'")
     if has_headers and convert_fn and not isinstance(convert_fn, dict):
         raise RuntimeError(
@@ -57,10 +52,9 @@ def parse_csv(
     if has_headers:
         headers = next(rows)
         if (
-            convert_fn
-            and not select
+            not select
             and isinstance(convert_fn, dict)
-            and set(headers) != set(convert_fn.keys())
+            and set(headers) != convert_fn.keys()
         ):
             raise RuntimeError("keys of 'convert_fn' does not match keys in headers")
         start = 1
