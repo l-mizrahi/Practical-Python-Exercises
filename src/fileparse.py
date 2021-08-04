@@ -76,12 +76,11 @@ def parse_csv(
 
         if has_headers:
             rowdict = dict(zip(headers, row))
-            if convert_fn:
+            if isinstance(convert_fn, dict):
                 try:
-                    if isinstance(convert_fn, dict):
-                        rowdict = {
-                            key: func(rowdict[key]) for key, func in convert_fn.items()
-                        }
+                    rowdict = {
+                        key: func(rowdict[key]) for key, func in convert_fn.items()
+                    }
                 except ValueError:
                     if verbose:
                         logging.exception(f"Couldn't convert row {rowno}:{row}")
@@ -89,10 +88,9 @@ def parse_csv(
             records.append(rowdict)
 
         else:
-            if convert_fn:
+            if isinstance(convert_fn, list):
                 try:
-                    if isinstance(convert_fn, list):
-                        row = [func(val) for func, val in zip(convert_fn, row)]
+                    row = [func(val) for func, val in zip(convert_fn, row)]
                 except ValueError:
                     if verbose:
                         logging.exception(f"Couldn't convert row {rowno}:{row}")
