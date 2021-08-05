@@ -34,7 +34,6 @@ def test_text_table_formatter(data):
         "       IBM        100     106.28      35.84",
     ]
     txt_formatter = TextTableFormatter()
-    print(headers, rows)
     report = txt_formatter.format(headers, rows)
 
     assert report == expected
