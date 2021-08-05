@@ -4,8 +4,8 @@ import pytest
 
 @pytest.fixture
 def data():
-    data = [
-        ("Name", "Shares", "Price", "Change"),
+    headers = ("Name", "Shares", "Price", "Change")
+    rows = [
         ("AA", 100, 9.22, -22.98),
         ("IBM", 50, 106.28, 15.18),
         ("CAT", 150, 35.46, -47.98),
@@ -14,13 +14,14 @@ def data():
         ("MSFT", 50, 20.89, -44.21),
         ("IBM", 100, 106.28, 35.84),
     ]
-    return data
+    return headers, rows
 
 
 def test_text_table_formatter(data):
     """
     Tests if the TextTableFormatter returns the correctly formatted table.
     """
+    headers, rows = data
     expected = [
         "      Name     Shares      Price     Change",
         "---------- ---------- ---------- ----------",
@@ -33,7 +34,8 @@ def test_text_table_formatter(data):
         "       IBM        100     106.28      35.84",
     ]
     txt_formatter = TextTableFormatter()
-    report = txt_formatter.format(data)
+    print(headers, rows)
+    report = txt_formatter.format(headers, rows)
 
     assert report == expected
 
@@ -42,6 +44,7 @@ def test_csv_table_formatter(data):
     """
     Tests if the CSVTableFormatter returns the correctly formatted table.
     """
+    headers, rows = data
     expected = [
         "Name,Shares,Price,Change",
         "AA,100,9.22,-22.98",
@@ -53,18 +56,30 @@ def test_csv_table_formatter(data):
         "IBM,100,106.28,35.84",
     ]
     csv_formatter = CSVTableFormatter()
-    report = csv_formatter.format(data)
+    report = csv_formatter.format(headers, rows)
 
     assert report == expected
 
 
 def test_table_formatter_no_data_or_headers():
     """
-    Test if TableFormatter raises a ValueError if there is only one row.
+    Test if TableFormatter raises a ValueError if headers or rows is empty.
     """
     txt_formatter = TextTableFormatter()
     with pytest.raises(ValueError):
-        txt_formatter.format([("Name", "Shares", "Price", "Change")])
+        txt_formatter.format(("Name", "Shares", "Price", "Change"), [()])
 
     with pytest.raises(ValueError):
-        txt_formatter.format([("AA", 100, 9.22, -22.98)])
+        txt_formatter.format((), [("AA", 100, 9.22, -22.98)])
+
+
+def test_table_formatter_size_of_headers_rows():
+    """
+    Tests if TableFormatter raises a ValueError if size of headers doesn't match size of a row.
+    """
+    txt_formatter = TextTableFormatter()
+    with pytest.raises(ValueError):
+        txt_formatter.format(("Name", "Shares", "Price"), [("AA", 100, 9.22, -22.98)])
+
+    with pytest.raises(ValueError):
+        txt_formatter.format(("Name", "Shares", "Price", "Change"), [("AA", 100, 9.22)])

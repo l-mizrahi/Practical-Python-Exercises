@@ -1,5 +1,4 @@
-from typing import List, Tuple, Union, cast
-import logging
+from typing import List, Tuple
 
 
 class TableFormatter:
@@ -30,21 +29,21 @@ class TableFormatter:
 
     def format(
         self,
-        data: Union[
-            List[Tuple[str, str, str, str]], List[Tuple[str, int, float, float]]
-        ],
+        headers: Tuple[str, str, str, str],
+        rows: List[Tuple[str, int, float, float]],
     ) -> List[str]:
         """
-        Formats data as a table.
-        :param data: The report data to create the table.
-        :raise ValueError: Raise error if there is only one row in data.
+        Formats headers and rows as a table.
+        :param headers: The headers of the table
+        :param rows: Rows of the table to be formatted
+        :raise ValueError: Raise error if headers or rows is empty,
+                           or if the size of headers does not match the size of a row.
+        :return: The formatted headers and rows
         """
-        if len(data) < 2:
-            raise ValueError(
-                f"Length of data is {len(data)}. data must have headers and at least one row"
-            )
-        headers = cast(Tuple[str, str, str, str], data[0])
-        rows = cast(List[Tuple[str, int, float, float]], data[1:])
+        if not headers or not rows:
+            raise ValueError("Headers or rows cannot be empty.")
+        if len(headers) != max([len(row) for row in rows]):
+            raise ValueError("Size of headers and rows must match")
         headings = self.headings(headers)
         row_list = self.rows(rows)
         return headings + row_list
@@ -64,11 +63,8 @@ class TextTableFormatter(TableFormatter):
         """
         fmt_str = " ".join(["{:>10s}"] * len(headers))
         dashes = " ".join(["-" * 10] * len(headers))
-        try:
-            headers_cap = list(map(lambda x: x.capitalize(), headers))
-            headers_fmt = fmt_str.format(*headers_cap)
-        except ValueError:
-            logging.exception(f"Couldn't convert headers to string: {headers}")
+        headers_cap = list(map(lambda x: x.capitalize(), headers))
+        headers_fmt = fmt_str.format(*headers_cap)
         return [headers_fmt, dashes]
 
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
@@ -99,7 +95,8 @@ class CSVTableFormatter(TableFormatter):
         :return: The formatted headers
         """
         headers_cap = list(map(lambda x: x.capitalize(), headers))
-        return [",".join(headers_cap)]
+        headers_str = [",".join(headers_cap)]
+        return headers_str
 
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
         """
