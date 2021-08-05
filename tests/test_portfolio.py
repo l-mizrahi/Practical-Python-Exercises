@@ -49,3 +49,33 @@ def test_portfolio_tabulate_shares(stock_data):
     }
     expected_counter = Counter(counts)
     assert expected_counter == portfolio.tabulate_shares()
+
+
+def test_portfolio_len(stock_data):
+    """
+    Tests Portfolio length.
+    """
+    portfolio = Portfolio(stock_data)
+    assert len(portfolio) == 7
+
+
+def test_portfolio_getitem(stock_data):
+    """
+    Tests Portfolio getitem.
+    """
+    portfolio = Portfolio(stock_data)
+    assert portfolio[1] == Stock("IBM", 50, 91.1)
+    assert portfolio[0:3] == [
+        Stock("AA", 100, 32.2),
+        Stock("IBM", 50, 91.1),
+        Stock("CAT", 150, 83.44),
+    ]
+
+
+def test_portfolio_contains(stock_data):
+    """
+    Tests Portfolio contains.
+    """
+    portfolio = Portfolio(stock_data)
+    assert "IBM" in portfolio
+    assert "AAPL" not in portfolio
