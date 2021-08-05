@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Union
-from .fileparse import parse_csv
-from .stock import Stock
+from .report import read_portfolio
 
 
 def portfolio_cost(file_path: Union[str, Path]) -> float:
@@ -12,16 +11,5 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
     :param file_path: Path to the portfolio file
     :return: The cost of the portfolio
     """
-    portdict = parse_csv(
-        file_path,
-        select=["shares", "price"],
-        convert_fn={"shares": int, "price": float},
-    )
-    portfolio = [
-        Stock(name="", shares=pd["shares"], price=pd["price"])
-        for pd in portdict
-        if isinstance(pd, dict)
-    ]
-    total_cost = sum(p.cost for p in portfolio)
-
-    return total_cost
+    portfolio = read_portfolio(file_path)
+    return portfolio.total_cost

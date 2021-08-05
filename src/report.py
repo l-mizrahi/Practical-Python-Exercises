@@ -2,10 +2,11 @@ from typing import List, Dict, Tuple, Union, cast
 from pathlib import Path
 from .fileparse import parse_csv
 from .stock import Stock
-from .tableformat import TableFormatter, FORMAT2FORMATTER_CLS
+from .tableformat import CSVTableFormatter, TableFormatter, TextTableFormatter
+from .portfolio import Portfolio
 
 
-def read_portfolio(file_path: Union[str, Path]) -> List[Stock]:
+def read_portfolio(file_path: Union[str, Path]) -> Portfolio:
     """
     Reads a portfolio file and places each entry into a list.
 
@@ -22,7 +23,7 @@ def read_portfolio(file_path: Union[str, Path]) -> List[Stock]:
         for pd in portdict
         if isinstance(pd, dict)
     ]
-    return portfolio
+    return Portfolio(portfolio)
 
 
 def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
@@ -37,7 +38,7 @@ def read_prices(file_path: Union[str, Path]) -> Dict[str, float]:
     return {name: price for name, price in prices}
 
 
-def calc_gain_loss(portfolio: List[Stock], prices: Dict) -> List[Stock]:
+def calc_gain_loss(portfolio: Portfolio, prices: Dict) -> Portfolio:
     """
     Calculates the change in stock price from a given portfolio and the current price.
 
@@ -51,7 +52,7 @@ def calc_gain_loss(portfolio: List[Stock], prices: Dict) -> List[Stock]:
 
 
 def make_report(
-    portfolio: List[Stock], prices: Dict[str, float]
+    portfolio: Portfolio, prices: Dict[str, float]
 ) -> List[Tuple[str, int, float, float]]:
     """
     Calculates the gain/loss for the portfolio and formats it to be printed.

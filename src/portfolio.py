@@ -32,3 +32,15 @@ class Portfolio:
         for stock in self._holdings:
             shares_counter[stock.name] += stock.shares
         return shares_counter
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Tests equivalence of two Portfolio objects.
+
+        :param other: Portfolio object to compare to
+        :return: Returns True if self and other have the same attributes otherwise False
+        """
+        if not isinstance(other, Portfolio):
+            return NotImplemented
+
+        return self._holdings == other._holdings
