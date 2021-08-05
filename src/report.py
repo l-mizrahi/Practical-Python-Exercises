@@ -79,9 +79,7 @@ def get_report(
     :param formatter: Formatter object to format the report.
     :return: Returns the table as a list where each entry is a row of the table
     """
-    headings = formatter.headings(("Name", "Shares", "Price", "Change"))
-    rows = formatter.rows(report_data)
-    return headings + rows
+    return formatter.format(("Name", "Shares", "Price", "Change"), report_data)
 
 
 def portfolio_report(
