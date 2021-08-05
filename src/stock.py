@@ -1,13 +1,8 @@
 class Stock:
-    name: str
-    shares: int
-    price: float
-    change: float
-
     def __init__(self, name: str, shares: int, price: float) -> None:
-        self.name = name
-        self.shares = shares
-        self.price = price
+        self.name: str = name
+        self.shares: int = shares
+        self.price: float = price
         self.change: float
 
     def cost(self) -> float:
@@ -28,21 +23,15 @@ class Stock:
 
     def __eq__(self, other: object) -> bool:
         """
-        Tests equivalence of two Stock objects.
+        Tests equivalence of two Python objects.
 
-        :param other: Stock object to compare to
+        :param other: Python object to compare to
         :return: Returns True if self and other have the same attributes otherwise False
         """
         if not isinstance(other, Stock):
             return NotImplemented
 
-        return all(
-            [
-                self.name == other.name,
-                self.shares == other.shares,
-                self.price == other.price,
-            ]
-        )
+        return self.__dict__ == other.__dict__
 
     def __repr__(self) -> str:
-        return f"Stock('{self.name}', {self.shares}, {self.price})"
+        return f"Stock(name='{self.name}', shares={self.shares}, price={self.price})"

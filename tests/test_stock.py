@@ -35,4 +35,4 @@ def test_stock_repr(stock):
     """
     Test if __repr__ method returns correct string.
     """
-    assert repr(stock) == "Stock('GOOG', 100, 490.1)"
+    assert repr(stock) == "Stock(name='GOOG', shares=100, price=490.1)"
