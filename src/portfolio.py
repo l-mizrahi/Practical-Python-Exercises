@@ -44,3 +44,12 @@ class Portfolio:
             return NotImplemented
 
         return self._holdings == other._holdings
+
+    def __len__(self) -> int:
+        return len(self._holdings)
+
+    def __contains__(self, name: str) -> bool:
+        return any([stock.name == name for stock in self._holdings])
+
+    def __getitem__(self, index: int) -> Stock:
+        return self._holdings[index]
