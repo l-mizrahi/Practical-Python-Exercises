@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def stock_data():
-    data = [
+    stock_data = [
         Stock(name="AA", shares=100, price=32.2),
         Stock(name="IBM", shares=50, price=91.1),
         Stock(name="CAT", shares=150, price=83.44),
@@ -16,36 +16,36 @@ def stock_data():
         Stock(name="IBM", shares=100, price=70.44),
     ]
 
-    return data
+    return stock_data
 
 
-def test_portfolio_init(data):
+def test_portfolio_init(stock_data):
     """
     Tests if Portfolio initializes correctly.
     """
-    portfolio = Portfolio(data)
-    assert portfolio._holdings == data
+    portfolio = Portfolio(stock_data)
+    assert portfolio._holdings == stock_data
 
 
-def test_portfolio_total_cost(data):
+def test_portfolio_total_cost(stock_data):
     """
     Tests if Portfolio calculates total cost of holdings correctly.
     """
-    portfolio = Portfolio(data)
+    portfolio = Portfolio(stock_data)
     assert portfolio.total_cost == 44671.15
 
 
-def test_portfolio_tabulate_shares(data):
+def test_portfolio_tabulate_shares(stock_data):
     """
     Tests if Portfolio returns the correct count of shares.
     """
-    portfolio = Portfolio(data)
+    portfolio = Portfolio(stock_data)
     counts = {
-        "AA": 1,
-        "IBM": 2,
-        "CAT": 1,
-        "MSFT": 2,
-        "GE": 1,
+        "AA": 100,
+        "IBM": 150,
+        "CAT": 150,
+        "MSFT": 250,
+        "GE": 95,
     }
     expected_counter = Counter(counts)
     assert expected_counter == portfolio.tabulate_shares()
