@@ -1,31 +1,42 @@
 from typing import List, Tuple
+from abc import ABC, abstractmethod
+import inspect
+import sys
 
 
-class TableFormatter:
+class TableFormatter(ABC):
     """
     Base class for formatting the portfolio report.
     This class should be extended to create tables in different formats.
     """
 
+    @property
+    @abstractmethod
+    def fmt(self) -> str:
+        """
+        The name of the type of formatter, i.e. 'txt', 'csv', 'html', etc.
+        """
+        pass
+
+    @abstractmethod
     def headings(self, headers: Tuple[str, str, str, str]) -> List[str]:
         """
         Format the table headings.
 
         :param headers: The headers of the table
-        :raises NotImplementedError: If headings() has not been overridden
         :return: The formatted headers
         """
-        raise NotImplementedError()
+        pass
 
+    @abstractmethod
     def rows(self, rowdata: List[Tuple[str, int, float, float]]) -> List[str]:
         """
         Format rows of table data.
 
         :param rowdata: Rows of the table to be formatted
-        :raises NotImplementedError: If row() has not been overridden
         :return: The formatted rows
         """
-        raise NotImplementedError()
+        pass
 
     def format(
         self,
@@ -53,6 +64,8 @@ class TextTableFormatter(TableFormatter):
     """
     Formats table in plain-text format.
     """
+
+    fmt = "txt"
 
     def headings(self, headers: Tuple[str, str, str, str]) -> List[str]:
         """
@@ -87,6 +100,8 @@ class CSVTableFormatter(TableFormatter):
     Formats table in CSV format.
     """
 
+    fmt = "csv"
+
     def headings(self, headers: Tuple[str, str, str, str]) -> List[str]:
         """
         Format the table headings in CSV format.
@@ -110,3 +125,25 @@ class CSVTableFormatter(TableFormatter):
             rowstr = [str(r) for r in row]
             output.append(",".join(rowstr))
         return output
+
+
+def is_formatter(x: object) -> bool:
+    """
+    Check if given object is a concrete Formatter object.
+
+    :param x: Any Python object
+    :return: True if x is a concrete formatter, False otherwise
+    """
+    return (
+        inspect.isclass(x)
+        and issubclass(x, TableFormatter)  # type: ignore
+        and not inspect.isabstract(x)
+    )
+
+
+FORMAT2FORMATTER_CLS = {
+    formatter_cls.fmt: formatter_cls
+    for _, formatter_cls in inspect.getmembers(
+        sys.modules[__name__], predicate=is_formatter
+    )
+}

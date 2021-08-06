@@ -1,4 +1,4 @@
-from src.tableformat import TextTableFormatter, CSVTableFormatter
+from src.tableformat import TextTableFormatter, CSVTableFormatter, is_formatter
 import pytest
 
 
@@ -82,3 +82,11 @@ def test_table_formatter_size_of_headers_rows():
 
     with pytest.raises(ValueError):
         txt_formatter.format(("Name", "Shares", "Price", "Change"), [("AA", 100, 9.22)])
+
+
+def test_is_formatter():
+    """
+    Tests if is_formatter returns True for a valid formatter
+    """
+    assert is_formatter(TextTableFormatter)
+    assert is_formatter(CSVTableFormatter)

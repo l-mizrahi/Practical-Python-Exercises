@@ -2,7 +2,7 @@ from typing import List, Dict, Tuple, Union, cast
 from pathlib import Path
 from .fileparse import parse_csv
 from .stock import Stock
-from .tableformat import CSVTableFormatter, TableFormatter, TextTableFormatter
+from .tableformat import TableFormatter, FORMAT2FORMATTER_CLS
 
 
 def read_portfolio(file_path: Union[str, Path]) -> List[Stock]:
@@ -79,7 +79,9 @@ def get_report(
     :param formatter: Formatter object to format the report.
     :return: Returns the table as a list where each entry is a row of the table
     """
-    return formatter.format(("Name", "Shares", "Price", "Change"), report_data)
+    return formatter.format(
+        headers=("Name", "Shares", "Price", "Change"), rows=report_data
+    )
 
 
 def portfolio_report(
@@ -92,16 +94,15 @@ def portfolio_report(
 
     :param portfolio_file_path: Path to the portfolio file
     :param prices_file_path: Path to the prices file
-    :param fmt: Format for the report to printed as. Can be one of 'txt' or 'csv'
+    :param fmt: Format for the report to printed. Can be any formatter defined in src/tableformat.py
     :return: Returns the table as a list where each entry is a row of the table
     """
-    formatter: Union[TextTableFormatter, CSVTableFormatter]
-    if fmt == "txt":
-        formatter = TextTableFormatter()
-    elif fmt == "csv":
-        formatter = CSVTableFormatter()
-    else:
-        raise RuntimeError(f"Unknown format {fmt}")
+    try:
+        formatter = FORMAT2FORMATTER_CLS[fmt]()
+    except KeyError:
+        raise RuntimeError(
+            f"Unknown format {fmt} - available formats are {FORMAT2FORMATTER_CLS.keys()}"
+        )
 
     portfolio = read_portfolio(portfolio_file_path)
     prices = read_prices(prices_file_path)
