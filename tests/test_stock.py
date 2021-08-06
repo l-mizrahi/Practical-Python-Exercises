@@ -20,7 +20,7 @@ def test_stock_cost(stock):
     """
     Tests if Stock calculates cost correctly.
     """
-    assert stock.cost() == 49010.0
+    assert stock.cost == 49010.0
 
 
 def test_stock_sell(stock):

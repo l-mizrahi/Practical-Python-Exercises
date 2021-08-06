@@ -5,6 +5,7 @@ class Stock:
         self.price: float = price
         self.change: float
 
+    @property
     def cost(self) -> float:
         """
         Calculates the cost of the stock.
