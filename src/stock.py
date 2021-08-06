@@ -1,9 +1,28 @@
 class Stock:
     def __init__(self, name: str, shares: int, price: float) -> None:
         self.name: str = name
-        self.shares: int = shares
+        self._shares: int = shares
         self.price: float = price
         self.change: float
+
+    @property
+    def shares(self) -> int:
+        """
+        Getter for shares
+        """
+        return self._shares
+
+    @shares.setter
+    def shares(self, value: int):
+        """
+        Setter for shares. Ensures shares is set to an integer.
+
+        :param value: New value for shares
+        :raises TypeError: If value is not an integer
+        """
+        if not isinstance(value, int):
+            raise TypeError(f"Expected int - got {value}")
+        self._shares = value
 
     @property
     def cost(self) -> float:

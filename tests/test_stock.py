@@ -36,3 +36,11 @@ def test_stock_repr(stock):
     Test if __repr__ method returns correct string.
     """
     assert repr(stock) == "Stock(name='GOOG', shares=100, price=490.1)"
+
+
+def test_stock_shares_setter(stock):
+    """
+    Test if TypeError raised if shares is assigned to non-integer.
+    """
+    with pytest.raises(TypeError):
+        stock.shares = 100.2
