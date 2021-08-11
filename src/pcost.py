@@ -22,6 +22,6 @@ def portfolio_cost(file_path: Union[str, Path]) -> float:
         for pd in portdict
         if isinstance(pd, dict)
     ]
-    total_cost = sum([p.cost for p in portfolio])
+    total_cost = sum(p.cost for p in portfolio)
 
     return total_cost
