@@ -1,3 +1,4 @@
+from src.portfolio import Portfolio
 from src.tableformat import CSVTableFormatter, TextTableFormatter
 from src.report import (
     get_report,
@@ -17,15 +18,17 @@ def test_read_portfolio():
     Tests if read_portfolio constructs each entry in the list correctly.
     """
     portfolio = read_portfolio(DATA_DIRECTORY / "portfolio.csv")
-    expected = [
-        Stock(name="AA", shares=100, price=32.2),
-        Stock(name="IBM", shares=50, price=91.1),
-        Stock(name="CAT", shares=150, price=83.44),
-        Stock(name="MSFT", shares=200, price=51.23),
-        Stock(name="GE", shares=95, price=40.37),
-        Stock(name="MSFT", shares=50, price=65.1),
-        Stock(name="IBM", shares=100, price=70.44),
-    ]
+    expected = Portfolio(
+        [
+            Stock(name="AA", shares=100, price=32.2),
+            Stock(name="IBM", shares=50, price=91.1),
+            Stock(name="CAT", shares=150, price=83.44),
+            Stock(name="MSFT", shares=200, price=51.23),
+            Stock(name="GE", shares=95, price=40.37),
+            Stock(name="MSFT", shares=50, price=65.1),
+            Stock(name="IBM", shares=100, price=70.44),
+        ]
+    )
 
     assert portfolio == expected
 
