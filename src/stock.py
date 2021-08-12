@@ -1,9 +1,4 @@
 class Stock:
-    name: str
-    shares: int
-    price: float
-    change: float
-
     def __init__(self, name: str, shares: int, price: float) -> None:
         self.name: str = name
         self._shares: int = shares

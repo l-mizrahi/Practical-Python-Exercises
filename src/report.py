@@ -2,7 +2,10 @@ from typing import List, Dict, Tuple, Union, cast
 from pathlib import Path
 from .fileparse import parse_csv
 from .stock import Stock
-from .tableformat import CSVTableFormatter, TableFormatter, TextTableFormatter
+from .tableformat import (
+    FORMAT2FORMATTER_CLS,
+    TableFormatter,
+)
 from .portfolio import Portfolio
 
 
